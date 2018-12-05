@@ -28,9 +28,6 @@
         <module>Reports</module>
         <module>Rabbit</module>
         <module>distribution</module>
-        <module>rus-dic</module>
-        <module>BlueToothTest</module>
-        <module>Arduino</module>
 -->
     </modules>
 
@@ -45,11 +42,11 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.lasgis.evolution</groupId>
-                <artifactId>Animation</artifactId>
-                <version>1.3.2-SNAPSHOT</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>com.lasgis.evolution</groupId>-->
+                <!--<artifactId>Animation</artifactId>-->
+                <!--<version>1.3.2-SNAPSHOT</version>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>com.lasgis.evolution</groupId>
                 <artifactId>Evolution</artifactId>
@@ -139,7 +136,7 @@
             <dependency>
                 <groupId>com.rabbitmq</groupId>
                 <artifactId>amqp-client</artifactId>
-                <version>3.0.4</version>
+                <version>5.5.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -180,51 +177,14 @@
                 <env>tiny</env>
             </properties>
         </profile>
-        <profile>
-            <!-- Запускаем команду: 'mvn clean install -P increment-version' -->
-            <id>increment-version</id>
-            <properties>
-                <skipTests>true</skipTests>
-                <env>tiny</env>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>autoincrement-versions-maven-plugin</artifactId>
-                        <version>2.0-SNAPSHOT</version>
-                        <executions>
-                            <execution>
-                                <id>update-pom-versions</id>
-                                <goals>
-                                    <goal>increment</goal>
-                                    <goal>commit</goal>
-                                </goals>
-                                <phase>compile</phase>
-                                <configuration>
-                                    <autoIncrementVersion>true</autoIncrementVersion>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 
+<!--
     <pluginRepositories>
         <pluginRepository>
             <id>repo1.maven.org</id>
             <name>LasGIS Internal Release Repository</name>
             <url>http://repo1.maven.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>autoincrement-versions-maven-plugin</id>
-            <name>autoincrement-versions-maven-plugin</name>
-            <url>http://autoincrement-versions-maven-plugin.googlecode.com/svn/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </pluginRepository>
     </pluginRepositories>
     <repositories>
@@ -239,6 +199,7 @@
             </releases>
         </repository>
     </repositories>
+-->
     <developers>
         <developer>
             <name>Vladimir Laskin</name>

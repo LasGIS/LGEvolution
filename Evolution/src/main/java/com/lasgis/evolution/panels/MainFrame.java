@@ -8,7 +8,7 @@
 
 package com.lasgis.evolution.panels;
 
-import com.lasgis.animation.panels.AnimationViewDialog;
+//import com.lasgis.animation.panels.AnimationViewDialog;
 import com.lasgis.component.StatusBar;
 import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.map.Matrix;
@@ -61,9 +61,6 @@ public class MainFrame extends JFrame implements ComponentListener {
         new SettingMenuItem(
             "File", "openFile.gif", "", null,
             new SettingMenuItem[] {
-                new SettingMenuItem("Animation", "help.gif",
-                    "Просмотр и редактирование Анимации", MainFrame.this::jMenuAnimationViewAction, null
-                ),
                 new SettingMenuItem(
                     "Load Matrix", "openFile.gif", "читаем матрицу", MainFrame.this::jMenuContextLoad, null
                 ),
@@ -90,10 +87,6 @@ public class MainFrame extends JFrame implements ComponentListener {
         new SettingToolBarItem(
             "Помощь", "help.gif", "Help",
             TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, MainFrame.this::jMenuHelpAboutAction
-        ),
-        new SettingToolBarItem(
-            "Animation", "help.gif", "Просмотр и редактирование Анимации",
-            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, MainFrame.this::jMenuAnimationViewAction
         ),
         new SettingToolBarItem(
             "Load Matrix", "openFile.gif", "читаем матрицу",
@@ -222,25 +215,6 @@ public class MainFrame extends JFrame implements ComponentListener {
     public void jMenuFileExitAction(final ActionEvent event) {
         // сохраняем локальную конфигурацию
         System.exit(0);
-    }
-
-    /**
-     * Help | About action performed.
-     *
-     * @param event Action Event
-     */
-    public void jMenuAnimationViewAction(final ActionEvent event) {
-        final AnimationViewDialog dlg = new AnimationViewDialog(this);
-        final Dimension dlgSize = dlg.getPreferredSize();
-        final Dimension frmSize = getSize();
-        final Point loc = getLocation();
-        dlg.setLocation(
-            (frmSize.width - dlgSize.width) / 2 + loc.x,
-            (frmSize.height - dlgSize.height) / 2 + loc.y
-        );
-        dlg.setModal(true);
-        dlg.pack();
-        dlg.setVisible(true);
     }
 
     /**

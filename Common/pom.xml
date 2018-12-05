@@ -20,10 +20,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Common Applet</name>
-    <description>Common Applets Utility</description>
-    <artifactId>evolution.util.Applet</artifactId>
-    <version>1.3.2-SNAPSHOT</version>
+    <name>Common</name>
+    <artifactId>common</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

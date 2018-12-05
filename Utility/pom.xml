@@ -20,11 +20,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Common Utility</name>
-    <description>Common Utility classes for LasGIS projects</description>
-    <artifactId>evolution.util</artifactId>
-    <version>1.3.2-SNAPSHOT</version>
+    <name>Utility</name>
+    <artifactId>utility</artifactId>
     <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
