@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ @(#)lg-logback.xml 1.0
+  ~
+  ~ Title: LG Evolution powered by Java
+  ~ Description: Program for imitation of evolutions process.
+  ~ Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+  -->
+
+<configuration scan="true" scanPeriod="2 minutes">
+
+  <appender name="STAT_FILE" class="ch.qos.logback.core.FileAppender">
+    <file>C:\LGEvolution\log\Statistics-Evolution.stat.log</file>
+    <encoder>
+      <charset>windows-1251</charset>
+      <pattern>%d [%t] %-5p %c{0} - %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>C:\LGEvolution\log\log4j-Evolution.log</file>
+    <append>true</append>
+    <encoder>
+      <charset>windows-1251</charset>
+      <pattern>%d [%t] %-5p %c{0} - %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d [%t] %-5p %c{0} - %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- TRACE, DEBUG, INFO, WARN, ERROR, OFF -->
+  <logger name="com.lasgis.evolution.statistic" level="DEBUG">
+    <appender-ref ref="STAT_FILE"/>
+  </logger>
+  <logger name="com.lasgis.evolution.object" level="DEBUG">
+    <appender-ref ref="FILE"/>
+  </logger>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

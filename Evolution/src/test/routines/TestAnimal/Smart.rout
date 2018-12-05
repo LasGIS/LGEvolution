@@ -1,0 +1,6 @@
+include include/NextImport.rout;
+
+/** Стратегия умного перехода. */
+routine smartRunTo(endCell, foodName) {
+    Log("info", "foodName = " + foodName);
+}

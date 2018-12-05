@@ -1,0 +1,54 @@
+import com.lasgis.evolution.object.animal.organs.CellStack;
+
+/**
+ * Стратегия поедания пищи.
+ */
+routine main DineRout() {
+    FindFood() ячейка_c_едой, название_еды;
+    smartRunTo(ячейка_c_едой, название_еды);
+    Dine(название_еды);
+    Birth();
+}
+
+/**
+ * Стратегия умного перехода.
+ */
+routine smartRunTo(endCell, foodName) {
+    runCellStack = new CellStack(9);
+    do {
+        smartFindWay(endCell) nextPoint, isCellBusy;
+        if (!isCellBusy) {
+            runCellStack.add(nextPoint);
+            nextPoint.element("Дорога").incValue();
+            RunTo(nextPoint);
+            //Log("info", "nextPoint = " + nextPoint);
+        }
+    } while (endCell != nextPoint && !isCellBusy);
+}
+
+/**
+ * Находим ближайший проход.
+ */
+routine smartFindWay(endCell) nearCell, setCellBusy {
+    nearCell = owner.cell;
+    minDist = 1000000000.0;
+    setCellBusy = (
+        endCell.element("Камень").value >= 5.0
+        endCell.animals.size() > 0
+    );
+
+    if (!setCellBusy) {
+        // находим ближайшее место
+        for (cellInd : owner.cell.near(2)) {
+            distance = cellInd.distance(endCell);// cellInd.moveTrouble();
+            //Log("cellInd: " + cellInd + "; distance: " + distance + "; trouble: " + cellInd.moveTrouble() + ";");
+            if (minDist > distance
+                && runCellStack.notContain(cellInd)
+                && cellInd.element("Камень").value < 5.0
+            ) {
+                minDist = distance;
+                nearCell = cellInd;
+            }
+        }
+    }
+}

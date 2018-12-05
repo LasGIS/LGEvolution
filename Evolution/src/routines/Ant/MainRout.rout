@@ -1,0 +1,13 @@
+include include/import.rout;
+include Smart.rout;
+
+/**
+ * Стратегия поедания пищи.
+ */
+routine main DineRout() {
+    smartFindFood() ячейка_c_едой, название_еды;
+    smartRunTo(ячейка_c_едой, название_еды);
+    Dine(название_еды);
+    Birth();
+}
+

@@ -1,0 +1,38 @@
+/****************************
+ * Стратегия поедания пищи. *
+ ****************************/
+routine main DineRout() {
+    FindFood() ячейка_c_едой, название_еды;
+    smartRunTo(ячейка_c_едой);
+    Dine(название_еды);
+    Birth();
+}
+
+/**
+ * Стратегия умного перехода.
+ */
+routine smartRunTo(endCell) {
+    do {
+        runCellStack = new CellStack(67,89);
+        FindWay(endCell) nextPoint;
+        runCellStack.add(nextPoint)
+        RunTo(nextPoint);
+    } while (endCell != nextPoint);
+}
+
+/**
+ * Находим ближайший проход.
+ */
+routine smartFindWay(endCell) nearCell {
+    cell = owner.cell;
+    minDist = 1000000000.0;
+
+    // находим ближайшее место
+    for (cellInd : owner.cell.near(2)) {
+        distance = cellInd.distance(endCell);
+        if (minDist > distance) {
+            minDist = distance;
+            nearCell = cellInd;
+        }
+    }
+}

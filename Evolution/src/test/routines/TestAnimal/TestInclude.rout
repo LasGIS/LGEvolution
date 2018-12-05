@@ -1,0 +1,9 @@
+/** Проверка на вставку. */
+include include/Import.rout;
+include Smart.rout;
+/**
+ * Стратегия поедания пищи.
+ */
+routine main DineRout() {
+    smartRunTo(ячейка_c_едой, название_еды);
+}
