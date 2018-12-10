@@ -1,9 +1,9 @@
 /*
- * @(#)LGFilenameFilter.java 1.0
+ * com.lasgis.util.LGFilenameFilter (06/27/2018)
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2013 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2018 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.util;
@@ -52,9 +52,7 @@ public class LGFilenameFilter implements FilenameFilter {
             if (lastPnt > 0) {
                 relExt = fileName.substring(lastPnt);
             }
-            if ((relExt != null) && (relExt.equalsIgnoreCase(ext))) {
-                return true;
-            }
+            return relExt != null && relExt.equalsIgnoreCase(ext);
         }
         return false;
     }

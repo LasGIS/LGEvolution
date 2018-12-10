@@ -21,23 +21,16 @@ import java.awt.*;
 public class StatusBar extends JComponent {
 
     /** размер разделителя между элементами. */
-    private static final int SIZE_WEIGHT_DELEMITER = 5;
+    private static final int SIZE_WEIGHT_DELIMITER = 5;
 
     /** размер разделителя между элементами. */
-    public static final int SIZE_HEIGHT_STATUSBAR = 24;
-
-    /**
-     * конструктор строки.
-     */
-    public StatusBar() {
-        this(new int[] {0, 100, 100, 100});
-    }
+    public static final int SIZE_HEIGHT_STATUS_BAR = 24;
 
     /**
      * конструктор строки.
      * @param sizes число разделов
      */
-    public StatusBar(final int[] sizes) {
+    private StatusBar(final int[] sizes) {
         super();
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         add(new StatusBarItem(" ", 0));
@@ -46,21 +39,13 @@ public class StatusBar extends JComponent {
             add(new StatusBarItem(" ", sizes[i]));
             Box.Filler rigidArea = (Box.Filler) Box.createRigidArea(
                 new Dimension(
-                    SIZE_WEIGHT_DELEMITER,
-                    SIZE_HEIGHT_STATUSBAR
+                    SIZE_WEIGHT_DELIMITER,
+                    SIZE_HEIGHT_STATUS_BAR
                 )
             );
             rigidArea.setForeground(new Color(0xff, 0xff, 0xff));
             add(rigidArea);
         }
-    }
-
-    /**
-     * Указать новое значение для первого раздела.
-     * @param text значение
-     */
-    public void setText(final String text) {
-        setText(text, 0);
     }
 
     /**
@@ -72,5 +57,4 @@ public class StatusBar extends JComponent {
         final JLabel label = (JLabel) this.getComponent(numItem * 2);
         label.setText(StatusBarItem.stringDeNormalize(text));
     }
-
 }

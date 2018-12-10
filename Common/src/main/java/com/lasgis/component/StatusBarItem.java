@@ -29,22 +29,15 @@ public class StatusBarItem extends JLabel {
     private static Border border = new BevelBorder(BevelBorder.LOWERED);
 
     /**
-     *
-     */
-    private StatusBarItem() {
-        super();
-    }
-
-    /**
      * Конструктор.
      * @param str начальное значение строки
      * @param aSize размер по вертикали
      */
-    public StatusBarItem(String str, int aSize) {
+    StatusBarItem(String str, int aSize) {
         super(stringDeNormalize(str));
         if (aSize > 0) {
             this.setBorder(border);
-            this.size = new Dimension(aSize, StatusBar.SIZE_HEIGHT_STATUSBAR);
+            this.size = new Dimension(aSize, StatusBar.SIZE_HEIGHT_STATUS_BAR);
         }
     }
 
@@ -73,18 +66,4 @@ public class StatusBarItem extends JLabel {
             return super.getPreferredSize();
         }
     }
-
-    /**
-     * Возвращаем минимальный размер ячейки (если он есть).
-     * @return the value of the <code>MinimumSize</code>
-     * @see javax.swing.plaf.ComponentUI
-    public java.awt.Dimension getMinimumSize() {
-        if (size != null) {
-            return size;
-        } else {
-            return super.getMinimumSize();
-        }
-    }
-     */
-
 }
