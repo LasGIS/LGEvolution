@@ -19,14 +19,14 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Evolution</name>
+    <name>Animation</name>
     <artifactId>animation</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.lasgis.evolution</groupId>
-            <artifactId>evolution.util.Applet</artifactId>
+            <artifactId>common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -60,6 +60,10 @@
         <dependency>
             <groupId>javax.media</groupId>
             <artifactId>jmf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lasgis.evolution</groupId>
+            <artifactId>common</artifactId>
         </dependency>
     </dependencies>
 </project>

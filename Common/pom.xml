@@ -27,7 +27,7 @@
     <dependencies>
         <dependency>
             <groupId>com.lasgis.evolution</groupId>
-            <artifactId>evolution.util</artifactId>
+            <artifactId>utility</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

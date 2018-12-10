@@ -37,19 +37,19 @@
         <log4j.version>1.2.17</log4j.version>
         <logback.version>1.0.13</logback.version>
         <slf.version>1.7.25</slf.version>
-        <main.basedir>D:\LGEvolution</main.basedir>
+        <main.basedir>D:\LGEvolution.git</main.basedir>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!--<dependency>-->
-                <!--<groupId>com.lasgis.evolution</groupId>-->
-                <!--<artifactId>Animation</artifactId>-->
-                <!--<version>1.3.2-SNAPSHOT</version>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>com.lasgis.evolution</groupId>
-                <artifactId>Evolution</artifactId>
+                <artifactId>animation</artifactId>
+                <version>1.3.2-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lasgis.evolution</groupId>
+                <artifactId>evolution</artifactId>
                 <version>1.3.2-SNAPSHOT</version>
             </dependency>
             <!--<dependency>-->
@@ -64,12 +64,12 @@
             <!--</dependency>-->
             <dependency>
                 <groupId>com.lasgis.evolution</groupId>
-                <artifactId>evolution.util.Applet</artifactId>
+                <artifactId>common</artifactId>
                 <version>1.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.lasgis.evolution</groupId>
-                <artifactId>evolution.util</artifactId>
+                <artifactId>utility</artifactId>
                 <version>1.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -222,6 +222,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.2</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
@@ -279,8 +280,4 @@
             </plugin>
         </plugins>
     </reporting>
-    <scm>
-        <connection>scm:svn:https://xp-dev.com/svn/LGEvolution/trunk</connection>
-        <url>https://xp-dev.com/svn/LGEvolution/trunk</url>
-    </scm>
 </project>

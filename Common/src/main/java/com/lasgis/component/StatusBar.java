@@ -30,7 +30,7 @@ public class StatusBar extends JComponent {
      * конструктор строки.
      * @param sizes число разделов
      */
-    private StatusBar(final int[] sizes) {
+    public StatusBar(final int[] sizes) {
         super();
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         add(new StatusBarItem(" ", 0));
