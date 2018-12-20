@@ -28,20 +28,20 @@ public class RoutineFactoryTest {
 
     private final TestAnimal animal = new TestAnimal(1, 1, new TestAnimalManager());
     private final StringBuilder expectedProgram = new StringBuilder(
-          "/** Проверка на вставку. */\r\n"
-        + "import com.lasgis.evolution.object.animal.organs.CellStack;\r\n"
-        + "import com.lasgis.evolution.object.animal.organs.Legs;\r\n"
-        + "\r\n"
-        + "/** Стратегия умного перехода. */\r\n"
-        + "routine smartRunTo(endCell, foodName) {\r\n"
-        + "    Log(\"info\", \"foodName = \" + foodName);\r\n"
-        + "}\r\n"
-        + "/**\r\n"
-        + " * Стратегия поедания пищи.\r\n"
-        + " */\r\n"
-        + "routine main DineRout() {\r\n"
-        + "    smartRunTo(ячейка_c_едой, название_еды);\r\n"
-        + "}\r\n"
+          "/** Проверка на вставку. */\n"
+        + "import com.lasgis.evolution.object.animal.organs.CellStack;\n"
+        + "import com.lasgis.evolution.object.animal.organs.Legs;\n"
+        + "\n"
+        + "/** Стратегия умного перехода. */\n"
+        + "routine smartRunTo(endCell, foodName) {\n"
+        + "    Log(\"info\", \"foodName = \" + foodName);\n"
+        + "}\n"
+        + "/**\n"
+        + " * Стратегия поедания пищи.\n"
+        + " */\n"
+        + "routine main DineRout() {\n"
+        + "    smartRunTo(ячейка_c_едой, название_еды);\n"
+        + "}\n"
     );
 
     @BeforeClass
