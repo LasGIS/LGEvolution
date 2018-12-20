@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.lasgis.evolution.utils.ColorHelper.colorNormal;
+
 /**
  * управление цветом по параметру.
  * @author vladimir.laskin
@@ -77,21 +79,4 @@ public class ParamColor implements PrimitiveColor {
         int blue = colorNormal((int) (firstColor.getBlue() + (lastColor.getBlue() - firstColor.getBlue()) * ratio));
         return new Color(red, green, blue);
     }
-
-    /**
-     * f.
-     * @param valColor f
-     * @return f
-     */
-    private int colorNormal(double valColor) {
-        int col = (int) valColor;
-        if (col < 0) {
-            return 0;
-        } else if (col > 255) {
-            return 255;
-        } else {
-            return col;
-        }
-    }
-
 }

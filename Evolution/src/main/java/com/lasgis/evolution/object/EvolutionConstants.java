@@ -21,7 +21,7 @@ public interface EvolutionConstants {
     @Info(type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     String GROUND_KEY = "Земля";
     /** Максимально возможное количество земли. */
-    double MAX_GROUND_VALUE = 500.0;
+    double MAX_GROUND_VALUE = 100.0;
     /** Выделения животных, в том числе труп. Кал пагубно влияет на жизнь растений и может их погубить. */
     @Info(type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     String EXCREMENT_KEY = "Фекалии";
@@ -116,7 +116,7 @@ public interface EvolutionConstants {
     String ANT_KEY = "муравей";
     /** намерение муравья. */
     String ANT_TARGET_KEY = ANT_KEY + TARGET_KEY;
-    /** запах смерти. */
+    //** запах смерти. */
     //String SMELL_OF_DEATH = "запах смерти";
     /** сколько сыплется песка. */
     double SMELL_DEATH_FACTOR = 0.0333;

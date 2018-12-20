@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
+import static com.lasgis.evolution.utils.ColorHelper.colorNormal;
+
 /**
  * The Class RatesColor.
  *
@@ -58,9 +60,9 @@ public class RatesColor implements PrimitiveColor {
             b += col.getBlue() * factor;
         }
         return new Color(
-            AbstractAnimal.colorNormal(r / sumFactor),
-            AbstractAnimal.colorNormal(g / sumFactor),
-            AbstractAnimal.colorNormal(b / sumFactor)
+            colorNormal(r / sumFactor),
+            colorNormal(g / sumFactor),
+            colorNormal(b / sumFactor)
         );
     }
 }

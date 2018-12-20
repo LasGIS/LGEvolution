@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.lasgis.evolution.object.animal.AnimalState.analise;
 import static com.lasgis.evolution.object.animal.AnimalState.move;
+import static com.lasgis.evolution.utils.ColorHelper.colorNormal;
 
 /**
  * Общие свойства всех животных.
@@ -270,22 +271,6 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
         final int green = colorNormal(firstColor.getGreen() + (lastColor.getGreen() - firstColor.getGreen()) * ratio);
         final int blue = colorNormal(firstColor.getBlue() + (lastColor.getBlue() - firstColor.getBlue()) * ratio);
         return new Color(red, green, blue);
-    }
-
-    /**
-     * Нормализация цвета (от 0 до 255).
-     * @param value исходный цвет
-     * @return нормализованный цвет
-     */
-    public static int colorNormal(final double value) {
-        final int col = (int) value;
-        if (col < 0) {
-            return 0;
-        } else if (col > 255) {
-            return 255;
-        } else {
-            return col;
-        }
     }
 
     /**

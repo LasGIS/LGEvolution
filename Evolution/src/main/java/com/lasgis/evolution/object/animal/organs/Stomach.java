@@ -37,6 +37,7 @@ import static com.lasgis.evolution.object.EvolutionConstants.NECTAR_KEY;
 import static com.lasgis.evolution.object.EvolutionConstants.NECTAR_NUTRITIONAL;
 import static com.lasgis.evolution.object.animal.AnimalState.analise;
 import static com.lasgis.evolution.object.animal.AnimalState.fecal;
+import static com.lasgis.evolution.utils.ColorHelper.colorNormal;
 
 /**
  * Желудочно-кишечный тракт определяет пищеварение.
@@ -54,7 +55,7 @@ public class Stomach {
     private static final double FOOD_PRESS = 0.999;
     private static final double FOOD_DINE = 5;
     private static final double FOOD_STOMACH = FOOD_DINE * FOOD_PRESS;
-    private static final Map<String, Double> NUTRITIONAL = new HashMap<String, Double>();
+    private static final Map<String, Double> NUTRITIONAL = new HashMap<>();
 
     /** Размер желудка в процентах от общей массы животного. */
     @Info(name = "Размер желудка", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
@@ -73,7 +74,7 @@ public class Stomach {
     private double distanceFactor = 0.5;
     private AbstractAnimal owner;
     /** цвет животного, различный от перевариваемости той или иной пищи. */
-    private static final HashMap<String, Color> ANIMAL_COLORS = new HashMap<String, Color>();
+    private static final HashMap<String, Color> ANIMAL_COLORS = new HashMap<>();
 
     static {
         NUTRITIONAL.put(GRASS_PLANT_KEY, GRASS_NUTRITIONAL);
@@ -415,9 +416,9 @@ public class Stomach {
             b += col.getBlue() * factor;
         }
         return new Color(
-            AbstractAnimal.colorNormal(r + (oldColor.getRed() - r) * age),
-            AbstractAnimal.colorNormal(g + (oldColor.getGreen() - g) * age),
-            AbstractAnimal.colorNormal(b + (oldColor.getBlue() - b) * age)
+            colorNormal(r + (oldColor.getRed() - r) * age),
+            colorNormal(g + (oldColor.getGreen() - g) * age),
+            colorNormal(b + (oldColor.getBlue() - b) * age)
         );
     }
 
