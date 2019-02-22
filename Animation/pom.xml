@@ -61,9 +61,5 @@
             <groupId>javax.media</groupId>
             <artifactId>jmf</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.lasgis.evolution</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
     </dependencies>
 </project>
