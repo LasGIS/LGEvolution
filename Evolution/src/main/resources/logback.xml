@@ -10,7 +10,7 @@
 <configuration scan="true" scanPeriod="2 minutes">
 
   <appender name="STAT_FILE" class="ch.qos.logback.core.FileAppender">
-    <file>D:\LGEvolution.git\log\Statistics-Evolution.stat.log</file>
+    <file>log\Statistics-Evolution.stat.log</file>
     <encoder>
       <charset>windows-1251</charset>
       <pattern>%d [%t] %-5p %c{0} - %m%n</pattern>
@@ -18,7 +18,7 @@
   </appender>
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>D:\LGEvolution.git\log\log4j-Evolution.log</file>
+    <file>log\log4j-Evolution.log</file>
     <append>true</append>
     <encoder>
       <charset>windows-1251</charset>

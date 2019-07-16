@@ -10,6 +10,7 @@ package com.lasgis.evolution.panels;
 
 //import com.lasgis.animation.panels.AnimationViewDialog;
 import com.lasgis.component.StatusBar;
+import com.lasgis.evolution.config.ConfigLocale;
 import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.map.Matrix;
 import com.lasgis.evolution.map.MatrixHelper;
@@ -17,6 +18,7 @@ import com.lasgis.util.SettingMenuItem;
 import com.lasgis.util.SettingToolBarItem;
 import com.lasgis.util.Util;
 import lombok.extern.slf4j.Slf4j;
+import sun.misc.ObjectInputFilter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -214,6 +216,7 @@ public class MainFrame extends JFrame implements ComponentListener {
      */
     public void jMenuFileExitAction(final ActionEvent event) {
         // сохраняем локальную конфигурацию
+        ConfigLocale.save();
         System.exit(0);
     }
 

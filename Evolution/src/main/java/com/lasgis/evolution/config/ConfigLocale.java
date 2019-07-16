@@ -10,6 +10,7 @@ package com.lasgis.evolution.config;
 
 import com.lasgis.evolution.map.Matrix;
 import com.lasgis.evolution.panels.ScaleManager;
+import lombok.Data;
 
 /**
  * Это класс для хранения локальных параметров.
@@ -25,6 +26,7 @@ import com.lasgis.evolution.panels.ScaleManager;
  * @version 1.0
  * @since 27.10.2008 : 17:15:31
  */
+@Data
 public class ConfigLocale {
 
     /** Правильное расширение для файла локальной конфигурации. */
@@ -46,7 +48,7 @@ public class ConfigLocale {
      * @param configFileName Полный путь к файлу локальной конфигурации
      */
     public ConfigLocale(String configFileName) {
-        setFileName(configFileName);
+        setFileName(HelpFileRead.getNameOnly(configFileName) + "." + REGULAR_LOCALE_EXTENSION);
         fillDefault();
     }
 
@@ -65,88 +67,6 @@ public class ConfigLocale {
     }
 
     /**
-     * Вернуть полный путь к файлу локальной конфигурации.
-     * @return полный путь к файлу локальной конфигурации
-     */
-    public String getFileName() {
-        return fileName;
-    }
-
-    /**
-     * Сохранить полный путь к файлу локальной конфигурации.
-     * @param fileName полный путь к файлу локальной конфигурации
-     */
-    public void setFileName(String fileName) {
-        this.fileName = (
-            HelpFileRead.getNameOnly(fileName) + "." + REGULAR_LOCALE_EXTENSION
-        );
-    }
-
-    /**
-     * Вернуть режим работы окна вывода карты.
-     * @return режим работы окна вывода карты
-     */
-    public int getRegime() {
-        return regime;
-    }
-
-    /**
-     * Сохранить режим работы окна вывода карты.
-     * @param regime режим работы окна вывода карты
-     */
-    public void setRegime(final int regime) {
-        this.regime = regime;
-    }
-
-    /**
-     * Вернуть широта верхнего левого угла.
-     * @return широта верхнего левого угла
-     */
-    public double getLatitude() {
-        return latitude;
-    }
-
-    /**
-     * Сохранить широта верхнего левого угла.
-     * @param latitude широта верхнего левого угла
-     */
-    public void setLatitude(final double latitude) {
-        this.latitude = latitude;
-    }
-
-    /**
-     * Вернуть долгота верхнего левого угла.
-     * @return долгота верхнего левого угла
-     */
-    public double getLongitude() {
-        return longitude;
-    }
-
-    /**
-     * Сохранить долгота верхнего левого угла.
-     * @param longitude долгота верхнего левого угла
-     */
-    public void setLongitude(final double longitude) {
-        this.longitude = longitude;
-    }
-
-    /**
-     * Вернуть размер пикселя в координатах карты.
-     * @return размер пикселя в координатах карты
-     */
-    public double getDelta() {
-        return delta;
-    }
-
-    /**
-     * Сохранить размер пикселя в координатах карты.
-     * @param delta размер пикселя в координатах карты
-     */
-    public void setDelta(final double delta) {
-        this.delta = delta;
-    }
-
-    /**
      * Дублируем вызов Фабрики для создания и заполнения.
      * @return обязательно заполненный объект
      * с локальной конфигурацией
@@ -155,4 +75,10 @@ public class ConfigLocale {
         return ConfigLocaleFactory.getLocale();
     }
 
+    /**
+     *
+     */
+    public static void save() {
+        ConfigLocaleFactory.saveLocale();
+    }
 }

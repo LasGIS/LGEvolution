@@ -42,14 +42,12 @@ public class ConfigLocaleFactory {
      * с локальной конфигурацией
      */
     public static ConfigLocale getLocaleFile(final String fileName) {
-        File file;
+        final File file;
         final String extension = HelpFileRead.getExtension(fileName);
         singleton = new ConfigLocale(fileName);
-        if (
-            ConfigLocale.REGULAR_LOCALE_EXTENSION.equalsIgnoreCase(extension)
-        ) {
+        if (ConfigLocale.REGULAR_LOCALE_EXTENSION.equalsIgnoreCase(extension)) {
             // читаем по новому
-            file = new File(fileName);
+            file = new File(singleton.getFileName());
             if (file.exists() && file.isFile()) {
                 XmlStorage.load(singleton, file);
             }
@@ -74,5 +72,9 @@ public class ConfigLocaleFactory {
             );
         }
         return singleton;
+    }
+
+    public static void saveLocale() {
+        XmlStorage.save(getLocale());
     }
 }

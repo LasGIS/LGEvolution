@@ -44,11 +44,10 @@ import java.io.OutputStream;
 public class XmlStorage {
 
     /** Ошибка при записи локальной конфигурации. */
-    private static final String LOCALE_SAVE_ERROR =
-        "Ошибка при записи локальной конфигурации.";
+    private static final String LOCALE_SAVE_ERROR = "Ошибка при записи локальной конфигурации.";
     /** Ошибка при записи локальной конфигурации. */
-    private static final String LOCALE_LOAD_ERROR =
-        "Ошибка при чтении локальной конфигурации.";
+    private static final String LOCALE_LOAD_ERROR = "Ошибка при чтении локальной конфигурации.";
+
     /** Пустой конструктор. */
     private XmlStorage() {
 
@@ -100,7 +99,7 @@ public class XmlStorage {
      * @param locale созданный объект класса ConfigLocale
      * @param rootElement главный элемент
      */
-    public static void parseLocale(ConfigLocale locale, Node rootElement) {
+    private static void parseLocale(ConfigLocale locale, Node rootElement) {
         NodeList nl = rootElement.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node nod = nl.item(i);
@@ -133,7 +132,7 @@ public class XmlStorage {
      * @param locale созданный объект класса ConfigLocale
      * @param rootElement главный элемент
      */
-    public static void parseProject(ConfigLocale locale, Node rootElement) {
+    private static void parseProject(ConfigLocale locale, Node rootElement) {
         // todo
     }
 
@@ -146,9 +145,9 @@ public class XmlStorage {
         assert locale != null : "Объект класса ConfigLocale должен быть уже"
             + " создан к этому моменту";
 
-        File file = new File(locale.getFileName());
+        final File file = new File(locale.getFileName());
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(false);
         // factory.setSchema();Attribute("encoding", "UTF-8");
         try {
@@ -158,14 +157,14 @@ public class XmlStorage {
             ).newSchema();
             factory.setSchema(s);
 */
-            DocumentBuilder builder = factory.newDocumentBuilder();
+            final DocumentBuilder builder = factory.newDocumentBuilder();
             factory.setIgnoringElementContentWhitespace(true);
-            Document doc = builder.newDocument();
+            final Document doc = builder.newDocument();
             // "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            Text txt = doc.createTextNode("\n");
-            Node rootElement = doc.createElement("LasGISConfig");
+//            final Text txt = doc.createTextNode("\n");
+            final Node rootElement = doc.createElement("LasGISConfig");
             doc.appendChild(rootElement);
-            //doc.insertBefore(txt, rootElement);
+//            doc.insertBefore(txt, rootElement);
 
 //            DOMImplementation impl = builder.getDOMImplementation();
 //            Document doc = impl.createDocument(
@@ -175,9 +174,9 @@ public class XmlStorage {
 //            );
 //            Node rootElement = doc.getDocumentElement();
             //doc.setXmlEncoding("Windows-1251");
-            Element localConfig = doc.createElement("LocalConfig");
+            final Element localConfig = doc.createElement("LocalConfig");
 
-            Element coordinate = doc.createElement("Coordinate");
+            final Element coordinate = doc.createElement("Coordinate");
             coordinate.setAttribute(
                 "latitude",
                 String.valueOf(locale.getLatitude())
@@ -186,13 +185,13 @@ public class XmlStorage {
                 "longitude",
                 String.valueOf(locale.getLongitude())
             );
-            ScaleManager sm = ScaleManager.getScaleManager();
+            final ScaleManager sm = ScaleManager.getScaleManager();
             sm.setDelta(locale.getDelta());
             coordinate.setAttribute(
                 "scale",
                 String.valueOf(sm.getScale())
             );
-            Element regime = doc.createElement("Regime");
+            final Element regime = doc.createElement("Regime");
             regime.setAttribute(
                 "number",
                 String.valueOf(locale.getRegime())
@@ -208,11 +207,11 @@ public class XmlStorage {
             doc.normalizeDocument();
 
             // Use a Transformer for output
-            TransformerFactory tFactory = TransformerFactory.newInstance();
-            Transformer transformer = tFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            OutputStream stream = new FileOutputStream(file);
-            StreamResult result = new StreamResult(stream);
+            final TransformerFactory tFactory = TransformerFactory.newInstance();
+            final Transformer transformer = tFactory.newTransformer();
+            final DOMSource source = new DOMSource(doc);
+            final OutputStream stream = new FileOutputStream(file);
+            final StreamResult result = new StreamResult(stream);
             transformer.transform(source, result);
 
             return true;
