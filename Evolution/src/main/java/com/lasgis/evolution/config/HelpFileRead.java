@@ -126,15 +126,11 @@ public class HelpFileRead {
      * @return расширение
      */
     public static String getExtension(String fileName) {
-        if (fileName != null) {
-            int ind = fileName.lastIndexOf('.');
-            if (ind > 0) {
-                return fileName.substring(ind + 1);
-            } else {
-                return "";
-            }
+        if (fileName == null) {
+            return null;
         }
-        return null;
+        int ind = fileName.lastIndexOf('.');
+        return ind > 0 ? fileName.substring(ind + 1) : "";
     }
 
     /**
@@ -147,15 +143,11 @@ public class HelpFileRead {
      * @return имя файла без расширения
      */
     public static String getNameOnly(String fileName) {
-        if (fileName != null) {
-            int ind = fileName.lastIndexOf('.');
-            if (ind > 0) {
-                return fileName.substring(0, ind);
-            } else {
-                return fileName;
-            }
+        if (fileName == null) {
+            return null;
         }
-        return null;
+        final int ind = fileName.lastIndexOf('.');
+        return ind > 0 ? fileName.substring(0, ind) : fileName;
     }
 
 }

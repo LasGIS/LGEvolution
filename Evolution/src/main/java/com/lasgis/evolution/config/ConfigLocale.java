@@ -10,17 +10,18 @@ package com.lasgis.evolution.config;
 
 import com.lasgis.evolution.map.Matrix;
 import com.lasgis.evolution.panels.ScaleManager;
+import com.lasgis.util.ResourceLoader;
 import lombok.Data;
+
+import java.io.File;
 
 /**
  * Это класс для хранения локальных параметров.
  * Класс должен содержать в себе все локальные
  * параметры и только параметры.
- * За создание и возвращение объекта класса отвечает
- * статический класс {@link com.lasgis.evolution.config.ConfigLocaleFactory}.
  * За чтение и запись новой локальной конфигурации
  * в формате XML отвечает класс
- * {@link com.lasgis.evolution.config.XmlStorage}.
+ * {@link XmlStorageLocale}.
  *
  * @author vlaskin
  * @version 1.0
@@ -28,6 +29,9 @@ import lombok.Data;
  */
 @Data
 public class ConfigLocale {
+
+    /** Единственный объект класса ConfigLocale. */
+    private static ConfigLocale singleton = null;
 
     /** Правильное расширение для файла локальной конфигурации. */
     public static final String REGULAR_LOCALE_EXTENSION = "locale";
@@ -55,7 +59,7 @@ public class ConfigLocale {
     /**
      * Заполняем поля по умолчанию.
      */
-    public void fillDefault() {
+    private void fillDefault() {
         // широта верхнего левого угла
         latitude = 32.0 * Matrix.CELL_SIZE;
         // долгота верхнего левого угла
@@ -67,18 +71,28 @@ public class ConfigLocale {
     }
 
     /**
-     * Дублируем вызов Фабрики для создания и заполнения.
-     * @return обязательно заполненный объект
-     * с локальной конфигурацией
+     * Получаем созданный ранее объект локальной конфигурации.
+     * Если ранее объект не был создан, то выбираем локальную конфигурацию по умолчанию.
+     * @return обязательно заполненный объект с локальной конфигурацией
      */
     public static ConfigLocale getLocale() {
-        return ConfigLocaleFactory.getLocale();
+        if (singleton == null) {
+            final String fileName = ResourceLoader.getResource("default.config.locale");
+            final String normalFileName = HelpFileRead.getNameOnly(fileName) + "." + REGULAR_LOCALE_EXTENSION;
+            singleton = new ConfigLocale(normalFileName);
+            // читаем по новому
+            final File file = new File(singleton.getFileName());
+            if (file.exists() && file.isFile()) {
+                XmlStorageLocale.load(singleton, file);
+            }
+        }
+        return singleton;
     }
 
     /**
-     *
+     * Сохраняем текущее состояние.
      */
     public static void save() {
-        ConfigLocaleFactory.saveLocale();
+        XmlStorageLocale.save(getLocale());
     }
 }
