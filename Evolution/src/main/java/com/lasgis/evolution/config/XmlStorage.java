@@ -8,14 +8,12 @@
 
 package com.lasgis.evolution.config;
 
-import com.lasgis.evolution.panels.ScaleManager;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -31,6 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.stream.IntStream;
 
 /**
  * Этот класс содержит статические методы для хранения
@@ -41,66 +42,59 @@ import java.io.OutputStream;
  * @since 27.10.2008 : 18:19:50
  */
 @Slf4j
-public class XmlStorage {
+public final class XmlStorage<OBJ> {
 
-    /** Ошибка при записи локальной конфигурации. */
-    private static final String LOCALE_SAVE_ERROR = "Ошибка при записи локальной конфигурации.";
-    /** Ошибка при записи локальной конфигурации. */
-    private static final String LOCALE_LOAD_ERROR = "Ошибка при чтении локальной конфигурации.";
+    /** Ошибка при записи объекта. */
+    private static final String SAVE_ERROR = "Ошибка при записи объекта: ";
+    /** Ошибка при чтении объекта. */
+    private static final String LOAD_ERROR = "Ошибка при чтении объекта: ";
 
-    /** Пустой конструктор. */
-    private XmlStorage() {
+    /** Пустой конструктор.
+     XmlStorage() {
 
-    }
+    } */
 
     /**
      * Читаем локальную конфигурацию в новом формате.
-     * @param locale созданный объект класса ConfigLocale
-     * @param file созданный и открытый для чтения старый файл  ConfigLocal
+     * @param locale созданный объект класса
+     * @param fileName имя файла для чтения
      * @return true если всё нормально
      */
-    public static boolean load(ConfigLocale locale, File file) {
-        assert locale != null : "Объект класса ConfigLocale должен быть уже"
-            + " создан к этому моменту";
-        assert file != null : "Файл должен быть открытым";
+    public boolean load(final OBJ locale, final String fileName) {
+        assert locale != null : "Объект класса OBJ должен быть уже создан к этому моменту";
+        assert fileName != null : "Файл должен быть открытым";
+        final File file = new File(fileName);
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(false);
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(file);
             Node rootElement = doc.getDocumentElement();
             NodeList nl = rootElement.getChildNodes();
-            for (int i = 0; i < nl.getLength(); i++) {
-                Node nod = nl.item(i);
-                if (nod.getNodeType() == Node.ELEMENT_NODE) {
-                    if ("LocalConfig".equalsIgnoreCase(nod.getNodeName())) {
-                        parseLocale(locale, nod);
-                    } else if (
-                        "ProjectConfig".equalsIgnoreCase(nod.getNodeName())
-                    ) {
-                        parseProject(locale, nod);
-                    }
-                }
-            }
+            IntStream.range(0, nl.getLength()).mapToObj(nl::item)
+                .filter(nod -> nod.getNodeType() == Node.ELEMENT_NODE)
+                .filter(nod -> "LocalConfig".equalsIgnoreCase(nod.getNodeName()))
+                .forEach(nod -> parseLocale(locale, nod));
 
             return true;
 
         } catch (SAXException exc) {
-            log.error(LOCALE_LOAD_ERROR, exc);
+            log.error(LOAD_ERROR, exc);
         } catch (IOException | ParserConfigurationException exc) {
-            log.error(LOCALE_LOAD_ERROR);
+            log.error(LOAD_ERROR);
         }
         return false;
     }
 
     /**
      * Прочитать локальную конфигурацию.
-     * @param locale созданный объект класса ConfigLocale
+     * @param locale созданный объект класса OBJ
      * @param rootElement главный элемент
      */
-    private static void parseLocale(ConfigLocale locale, Node rootElement) {
+    private void parseLocale(final OBJ locale, Node rootElement) {
         NodeList nl = rootElement.getChildNodes();
+/*
         for (int i = 0; i < nl.getLength(); i++) {
             Node nod = nl.item(i);
             if (nod.getNodeType() == Node.ELEMENT_NODE) {
@@ -125,68 +119,46 @@ public class XmlStorage {
                 }
             }
         }
-    }
-
-    /**
-     * Прочитать проектную конфигурацию.
-     * @param locale созданный объект класса ConfigLocale
-     * @param rootElement главный элемент
-     */
-    private static void parseProject(ConfigLocale locale, Node rootElement) {
-        // todo
+*/
     }
 
     /**
      * Сохраняем локальную конфигурацию в новом формате.
-     * @param locale созданный объект класса ConfigLocale
+     * @param obj созданный объект класса OBJ
+     * @param fileName имя файла для записи
      * @return true если всё нормально
      */
-    public static boolean save(ConfigLocale locale) {
-        assert locale != null : "Объект класса ConfigLocale должен быть уже"
-            + " создан к этому моменту";
+    public boolean save(OBJ obj, final String fileName) {
+        assert obj != null : "Объект класса должен быть уже создан к этому моменту";
 
-        final File file = new File(locale.getFileName());
+        final String className = obj.getClass().getSimpleName();
+        final Method[] methods = obj.getClass().getDeclaredMethods();
+        final File file = new File(fileName);
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(false);
-        // factory.setSchema();Attribute("encoding", "UTF-8");
         try {
-/*
-            Schema s = SchemaFactory.newInstance(
-                XMLConstants.RELAXNG_NS_URI
-            ).newSchema();
-            factory.setSchema(s);
-*/
             final DocumentBuilder builder = factory.newDocumentBuilder();
             factory.setIgnoringElementContentWhitespace(true);
             final Document doc = builder.newDocument();
-            // "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-//            final Text txt = doc.createTextNode("\n");
-            final Node rootElement = doc.createElement("LasGISConfig");
+            final Node rootElement = doc.createElement(className);
             doc.appendChild(rootElement);
-//            doc.insertBefore(txt, rootElement);
-
-//            DOMImplementation impl = builder.getDOMImplementation();
-//            Document doc = impl.createDocument(
-//                "http://lasgis.config.locale.XmlStorage",
-//                "document",
-//                null
-//            );
-//            Node rootElement = doc.getDocumentElement();
-            //doc.setXmlEncoding("Windows-1251");
+            for (final Method method : methods) {
+                saveField(obj, method, doc, rootElement, 1);
+            }
+/*
             final Element localConfig = doc.createElement("LocalConfig");
-
             final Element coordinate = doc.createElement("Coordinate");
             coordinate.setAttribute(
                 "latitude",
-                String.valueOf(locale.getLatitude())
+                String.valueOf(obj.getLatitude())
             );
             coordinate.setAttribute(
                 "longitude",
-                String.valueOf(locale.getLongitude())
+                String.valueOf(obj.getLongitude())
             );
             final ScaleManager sm = ScaleManager.getScaleManager();
-            sm.setDelta(locale.getDelta());
+            sm.setDelta(obj.getDelta());
             coordinate.setAttribute(
                 "scale",
                 String.valueOf(sm.getScale())
@@ -194,7 +166,7 @@ public class XmlStorage {
             final Element regime = doc.createElement("Regime");
             regime.setAttribute(
                 "number",
-                String.valueOf(locale.getRegime())
+                String.valueOf(obj.getRegime())
             );
             localConfig.appendChild(doc.createTextNode("\n    "));
             localConfig.appendChild(coordinate);
@@ -204,6 +176,7 @@ public class XmlStorage {
             rootElement.appendChild(doc.createTextNode("\n  "));
             rootElement.appendChild(localConfig);
             rootElement.appendChild(doc.createTextNode("\n"));
+*/
             doc.normalizeDocument();
 
             // Use a Transformer for output
@@ -216,10 +189,86 @@ public class XmlStorage {
 
             return true;
 
-        } catch (FileNotFoundException | TransformerException | ParserConfigurationException exc) {
-            log.error(LOCALE_SAVE_ERROR, exc);
+        } catch (FileNotFoundException |
+            TransformerException |
+            ParserConfigurationException |
+            IllegalAccessException |
+            InvocationTargetException ex
+        ) {
+            log.error(SAVE_ERROR + ex.getMessage(), ex);
         }
         return false;
+    }
+
+    /**
+     *  -
+     * @param obj      -
+     * @param method   -
+     * @param doc      -
+     * @param parentElement  -
+     * @param level    -
+     */
+    private void saveField(
+        final Object obj,
+        final Method method,
+        final Document doc,
+        final Node parentElement,
+        final int level
+    ) throws IllegalAccessException, InvocationTargetException {
+        final String methodName = method.getName();
+        final String mtdFieldName = methodName.startsWith("get") ?
+            methodName.substring(3) :
+            methodName.startsWith("is") ?
+                methodName.substring(2) : null;
+        if (mtdFieldName == null) return;
+        final String fieldName = mtdFieldName.substring(0, 1).toLowerCase() + mtdFieldName.substring(1);
+        final Element element = doc.createElement(fieldName);
+        final String value;
+        switch (method.getReturnType().getName()) {
+            case "int":
+                value = Integer.toString((Integer) method.invoke(obj));
+                break;
+            case "double" :
+                value = Double.toString((Double) method.invoke(obj));
+                break;
+            case "java.lang.String" :
+                value = (String) method.invoke(obj);
+                break;
+            default:
+                value = "";
+                break;
+/*
+            default:
+                final Object fieldObj = field.get(obj);
+                if (fieldObj instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    final Map<Object, Object> map = (Map<Object, Object>) fieldObj;
+                    for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                        final String key = entry.getKey().toString();
+                        final String valStr;
+                        final Object val = entry.getValue();
+                        if (val instanceof Double) {
+                            valStr = LGFormatter.format((Double) val * info.rate());
+                        } else if (val instanceof Integer) {
+                            valStr = Integer.toString((Integer) val);
+                        } else {
+                            valStr = val.toString();
+                        }
+                        sb.append(name).append('.').append(key).append(" \t").append(valStr).append('\n');
+                    }
+                } else if (fieldObj instanceof AnimalState) {
+                    sb.append(name).append(" \t").append(((AnimalState) fieldObj).name).append('\n');
+                } else {
+                    sb.append("--- ").append(name).append(" --- \n");
+                    getInfo(sb, fieldObj, fieldObj.getClass());
+                }
+                break;
+*/
+        }
+        element.setAttribute("value", value);
+        parentElement.appendChild(doc.createTextNode(StringUtils.repeat("   ", level)));
+        parentElement.appendChild(element);
+        parentElement.appendChild(doc.createTextNode("\n"));
     }
 
 }
