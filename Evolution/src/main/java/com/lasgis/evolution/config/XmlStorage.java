@@ -143,40 +143,10 @@ public final class XmlStorage<OBJ> {
             final Document doc = builder.newDocument();
             final Node rootElement = doc.createElement(className);
             doc.appendChild(rootElement);
+            rootElement.appendChild(doc.createTextNode("\n"));
             for (final Method method : methods) {
                 saveField(obj, method, doc, rootElement, 1);
             }
-/*
-            final Element localConfig = doc.createElement("LocalConfig");
-            final Element coordinate = doc.createElement("Coordinate");
-            coordinate.setAttribute(
-                "latitude",
-                String.valueOf(obj.getLatitude())
-            );
-            coordinate.setAttribute(
-                "longitude",
-                String.valueOf(obj.getLongitude())
-            );
-            final ScaleManager sm = ScaleManager.getScaleManager();
-            sm.setDelta(obj.getDelta());
-            coordinate.setAttribute(
-                "scale",
-                String.valueOf(sm.getScale())
-            );
-            final Element regime = doc.createElement("Regime");
-            regime.setAttribute(
-                "number",
-                String.valueOf(obj.getRegime())
-            );
-            localConfig.appendChild(doc.createTextNode("\n    "));
-            localConfig.appendChild(coordinate);
-            localConfig.appendChild(doc.createTextNode("\n    "));
-            localConfig.appendChild(regime);
-            localConfig.appendChild(doc.createTextNode("\n  "));
-            rootElement.appendChild(doc.createTextNode("\n  "));
-            rootElement.appendChild(localConfig);
-            rootElement.appendChild(doc.createTextNode("\n"));
-*/
             doc.normalizeDocument();
 
             // Use a Transformer for output
@@ -222,20 +192,33 @@ public final class XmlStorage<OBJ> {
                 methodName.substring(2) : null;
         if (mtdFieldName == null) return;
         final String fieldName = mtdFieldName.substring(0, 1).toLowerCase() + mtdFieldName.substring(1);
-        final Element element = doc.createElement(fieldName);
-        final String value;
+        String value = null;
         switch (method.getReturnType().getName()) {
             case "int":
-                value = Integer.toString((Integer) method.invoke(obj));
-                break;
-            case "double" :
-                value = Double.toString((Double) method.invoke(obj));
-                break;
+            case "java.lang.Integer": {
+                Integer integer = (Integer) method.invoke(obj);
+                if (integer != null) {
+                    value = Integer.toString(integer);
+                }
+            } break;
+            case "double":
+            case "java.lang.Double": {
+                final Double dbl = (Double) method.invoke(obj);
+                if (dbl != null) {
+                    value = Double.toString(dbl);
+                }
+            } break;
+            case "boolean":
+            case "java.lang.Boolean": {
+                final Boolean bool = (Boolean) method.invoke(obj);
+                if (bool != null) {
+                    value = Boolean.toString(bool);
+                }
+            } break;
             case "java.lang.String" :
                 value = (String) method.invoke(obj);
                 break;
             default:
-                value = "";
                 break;
 /*
             default:
@@ -265,10 +248,13 @@ public final class XmlStorage<OBJ> {
                 break;
 */
         }
-        element.setAttribute("value", value);
-        parentElement.appendChild(doc.createTextNode(StringUtils.repeat("   ", level)));
-        parentElement.appendChild(element);
-        parentElement.appendChild(doc.createTextNode("\n"));
+        if (value != null) {
+            final Element element = doc.createElement(fieldName);
+            element.setAttribute("value", value);
+            parentElement.appendChild(doc.createTextNode(StringUtils.repeat("   ", level)));
+            parentElement.appendChild(element);
+            parentElement.appendChild(doc.createTextNode("\n"));
+        }
     }
 
 }
