@@ -24,10 +24,13 @@ public class XmlStorageTest {
         .intNumber(123)
         .dblNumber(3.1415926)
         .bool(true)
+        .model(SimpleModel.builder().name("Model4").intNumber(1).bool(true).build())
+/*
         .array(Arrays.asList(
             SimpleModel.builder().name("first").intNumber(1).bool(true).build(),
             SimpleModel.builder().name("second").intNumber(2).bool(false).build()
         ))
+*/
         .build();
 
     @BeforeMethod

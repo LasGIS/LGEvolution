@@ -16,13 +16,11 @@ import java.util.Map;
 @Builder
 public class SimpleModel {
     private String name;
-    private int intNumber;
-    private Integer intNumberNull;
-    private double dblNumber;
-    private Double dblNumberNull;
-    private boolean bool;
-    private Boolean boolNull;
+    private Integer intNumber;
+    private Double dblNumber;
+    private Boolean bool;
+    private SimpleModel model;
     private SimpleType type;
-    private List<SimpleModel> array;
-    private Map<String, SimpleModel> map;
+//    private List<SimpleModel> array;
+//    private Map<String, SimpleModel> map;
 }

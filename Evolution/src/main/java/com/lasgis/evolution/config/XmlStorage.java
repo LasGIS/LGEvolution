@@ -171,6 +171,29 @@ public final class XmlStorage<OBJ> {
     }
 
     /**
+     * -
+     * @param obj -
+     * @param doc -
+     * @param level -
+     * @throws InvocationTargetException -
+     * @throws IllegalAccessException -
+     */
+    private Element saveObject(
+        final String fieldName,
+        final Object obj,
+        final Document doc,
+        final int level
+    ) throws InvocationTargetException, IllegalAccessException {
+        final Method[] methods = obj.getClass().getDeclaredMethods();
+        final Element element = doc.createElement(fieldName);
+        element.appendChild(doc.createTextNode("\n"));
+        for (final Method method : methods) {
+            saveField(obj, method, doc, element, level + 1);
+        }
+        element.appendChild(doc.createTextNode(StringUtils.repeat("   ", level)));
+        return element;
+    }
+    /**
      *  -
      * @param obj      -
      * @param method   -
@@ -218,35 +241,15 @@ public final class XmlStorage<OBJ> {
             case "java.lang.String" :
                 value = (String) method.invoke(obj);
                 break;
-            default:
-                break;
-/*
-            default:
-                final Object fieldObj = field.get(obj);
-                if (fieldObj instanceof Map) {
-                    @SuppressWarnings("unchecked")
-                    final Map<Object, Object> map = (Map<Object, Object>) fieldObj;
-                    for (Map.Entry<Object, Object> entry : map.entrySet()) {
-                        final String key = entry.getKey().toString();
-                        final String valStr;
-                        final Object val = entry.getValue();
-                        if (val instanceof Double) {
-                            valStr = LGFormatter.format((Double) val * info.rate());
-                        } else if (val instanceof Integer) {
-                            valStr = Integer.toString((Integer) val);
-                        } else {
-                            valStr = val.toString();
-                        }
-                        sb.append(name).append('.').append(key).append(" \t").append(valStr).append('\n');
-                    }
-                } else if (fieldObj instanceof AnimalState) {
-                    sb.append(name).append(" \t").append(((AnimalState) fieldObj).name).append('\n');
-                } else {
-                    sb.append("--- ").append(name).append(" --- \n");
-                    getInfo(sb, fieldObj, fieldObj.getClass());
+            default: {
+                final Object sub = method.invoke(obj);
+                if (sub != null) {
+                    final Element element = saveObject(fieldName, sub, doc, level);
+                    parentElement.appendChild(doc.createTextNode(StringUtils.repeat("   ", level)));
+                    parentElement.appendChild(element);
+                    parentElement.appendChild(doc.createTextNode("\n"));
                 }
-                break;
-*/
+            } break;
         }
         if (value != null) {
             final Element element = doc.createElement(fieldName);
