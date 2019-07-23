@@ -184,8 +184,10 @@ public final class XmlStorage<OBJ> {
         final Document doc,
         final int level
     ) throws InvocationTargetException, IllegalAccessException {
+        final String className = obj.getClass().getSimpleName();
         final Method[] methods = obj.getClass().getDeclaredMethods();
         final Element element = doc.createElement(fieldName);
+        element.setAttribute("className", className);
         element.appendChild(doc.createTextNode("\n"));
         for (final Method method : methods) {
             saveField(obj, method, doc, element, level + 1);
@@ -249,7 +251,7 @@ public final class XmlStorage<OBJ> {
                     parentElement.appendChild(element);
                     parentElement.appendChild(doc.createTextNode("\n"));
                 }
-            } break;
+            } return;
         }
         if (value != null) {
             final Element element = doc.createElement(fieldName);
