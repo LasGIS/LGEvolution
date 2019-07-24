@@ -8,7 +8,6 @@
 
 package com.lasgis.evolution.panels;
 
-//import com.lasgis.animation.panels.AnimationViewDialog;
 import com.lasgis.component.StatusBar;
 import com.lasgis.evolution.config.ConfigLocale;
 import com.lasgis.evolution.map.Cell;
@@ -18,19 +17,12 @@ import com.lasgis.util.SettingMenuItem;
 import com.lasgis.util.SettingToolBarItem;
 import com.lasgis.util.Util;
 import lombok.extern.slf4j.Slf4j;
-import sun.misc.ObjectInputFilter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
-import static com.lasgis.evolution.object.EvolutionConstants.CHAMOMILE_LEAF_KEY;
-import static com.lasgis.evolution.object.EvolutionConstants.GRASS_PLANT_KEY;
-import static com.lasgis.evolution.object.EvolutionConstants.GROUND_KEY;
+import static com.lasgis.evolution.object.EvolutionConstants.*;
 
 /**
  * Created by IntelliJ IDEA.
