@@ -12,8 +12,10 @@ import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.object.EvolutionConstants;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
-import java.util.Arrays;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.util.Collections;
 
 /**
  * Простой класс растений.
@@ -56,7 +58,7 @@ public class GrassPlant extends AbstractPlant {
     public void cellProcessing(final Cell cell) {
         double grass = cell.element(GRASS_PLANT_KEY).value();
         if (grass > 0.00001) {
-            final double plantForbid = cell.plantForbid(Arrays.asList(GRASS_PLANT_KEY));
+            final double plantForbid = cell.plantForbid(Collections.singletonList(GRASS_PLANT_KEY));
             final double obstacle = cell.obstacle();
             final double ground = cell.element(GROUND_KEY).value();
 
@@ -66,6 +68,9 @@ public class GrassPlant extends AbstractPlant {
             final double favour = ground * 1;
             final double balance = (favour - forbid) / 100;
             final double incDelta = grass * balance / 30.0;
+
+            // растение забирает сок земли
+            cell.element(GROUND_KEY).decValue(grass / GROUND_PLAN_DELIMITER);
 
             if (incDelta > 0) {
                 grass = cell.element(GRASS_PLANT_KEY).incValue(incDelta);

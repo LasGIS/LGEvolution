@@ -17,7 +17,8 @@ import com.lasgis.evolution.object.EvolutionConstants;
 import com.lasgis.evolution.object.PlantBehaviour;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,12 +48,13 @@ public class ChamomilePlant extends AbstractPlant {
         return subElements;
     }
 
-    private final PlantBehaviour[] subElements = new PlantBehaviour[] {
+    private final PlantBehaviour[] subElements = new PlantBehaviour[]{
         new AbstractPlantBehaviour() {
             @Override
             public String getName() {
                 return CHAMOMILE_LEAF_KEY;
             }
+
             @Override
             public void drawPlant(final Graphics gr, final Rectangle rec, final Cell cell) {
                 final double chamomileLeaf = cell.element(CHAMOMILE_LEAF_KEY).value();
@@ -66,6 +68,7 @@ public class ChamomilePlant extends AbstractPlant {
                     DrawPrimitive.drawPolygon(gr, DrawPrimitive.CHAMOMILE_LEAF_PRIMITIVE, prop, x, y);
                 }
             }
+
             @Override
             public void cellProcessing(final Cell cell) {
                 double leaf = cell.element(CHAMOMILE_LEAF_KEY).value();
@@ -83,6 +86,9 @@ public class ChamomilePlant extends AbstractPlant {
                     final double balance = (favour - forbid) / 100;
                     final double incDelta = leaf * balance / 30.0;
 
+                    // растение забирает сок земли
+                    cell.element(GROUND_KEY).decValue(leaf / GROUND_PLAN_DELIMITER);
+
                     if (incDelta > 0) {
                         leaf = cell.element(CHAMOMILE_LEAF_KEY).incValue(incDelta);
                     } else {
@@ -99,11 +105,13 @@ public class ChamomilePlant extends AbstractPlant {
                     cell.getCell(0, -1).element(CHAMOMILE_LEAF_KEY).incValue(sets);
                 }
             }
-        }, new AbstractPlantBehaviour() {
+        },
+        new AbstractPlantBehaviour() {
             @Override
             public String getName() {
                 return CHAMOMILE_FLOWER_KEY;
             }
+
             @Override
             public void drawPlant(final Graphics gr, final Rectangle rec, final Cell cell) {
                 final double chamomileLeaf = cell.element(CHAMOMILE_FLOWER_KEY).value();
@@ -116,6 +124,7 @@ public class ChamomilePlant extends AbstractPlant {
                     DrawPrimitive.drawPolygon(gr, DrawPrimitive.CHAMOMILE_FLOWER_PRIMITIVE, prop, x, y);
                 }
             }
+
             @Override
             public void cellProcessing(final Cell cell) {
                 final double leaf = cell.element(CHAMOMILE_LEAF_KEY).value();
@@ -146,11 +155,13 @@ public class ChamomilePlant extends AbstractPlant {
                     }
                 }
             }
-        }, new AbstractPlantBehaviour() {
+        },
+        new AbstractPlantBehaviour() {
             @Override
             public String getName() {
                 return NECTAR_KEY;
             }
+
             @Override
             public void drawPlant(final Graphics gr, final Rectangle rec, final Cell cell) {
                 final double honey = cell.element(NECTAR_KEY).value();
@@ -163,6 +174,7 @@ public class ChamomilePlant extends AbstractPlant {
                     DrawPrimitive.drawPolygon(gr, DrawPrimitive.NECTAR_PRIMITIVE, prop, x, y);
                 }
             }
+
             @Override
             public void cellProcessing(final Cell cell) {
                 final double flower = cell.element(CHAMOMILE_FLOWER_KEY).value();

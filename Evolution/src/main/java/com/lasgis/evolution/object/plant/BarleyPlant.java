@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 /**
- * The Class BarleyPlant.
+ * The Class BarleyPlant (овес или ячмень).
  * @author vladimir.laskin
  * @version 1.0
  */
@@ -77,6 +77,9 @@ public class BarleyPlant extends AbstractPlant {
             final double favour = ground * 1 + obstacle * 0.5;
             final double balance = (favour - forbid) / 100;
             double incDelta = barley * balance / 30.0;
+
+            // растение забирает сок земли
+            cell.element(GROUND_KEY).decValue(barley / GROUND_PLAN_DELIMITER);
 
             if (incDelta > 0) {
 /*

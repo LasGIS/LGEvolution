@@ -17,11 +17,13 @@ import com.lasgis.evolution.object.InfoType;
 import com.lasgis.evolution.object.PlantBehaviour;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Icon;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 
 /**
  * Общая часть для всех растений и минералов, привязанных к земле.
+ *
  * @author vladimir.laskin
  * @version 1.0
  */
@@ -120,17 +122,18 @@ public abstract class AbstractPlant implements PlantBehaviour {
      * Параметр angle указывает минимальную разницу значений
      * для перемещения. Так, если angle = 10, то перемещение
      * происходит при разнице, как показано на рисунке ниже:
-<pre>
-     +----+----+----+
-     | 14 | 10 | 14 |
-     +----+----+----+
-     | 10 | XX | 10 |
-     +----+----+----+
-     | 14 | 10 | 14 |
-     +----+----+----+
-</pre>
-     * @param cell центральная ячейка
-     * @param key ключевое слово для поиска вещества
+     * <pre>
+     * +----+----+----+
+     * | 14 | 10 | 14 |
+     * +----+----+----+
+     * | 10 | XX | 10 |
+     * +----+----+----+
+     * | 14 | 10 | 14 |
+     * +----+----+----+
+     * </pre>
+     *
+     * @param cell  центральная ячейка
+     * @param key   ключевое слово для поиска вещества
      * @param angle минимальная разница значений для перемещения
      */
     protected void sliding(final Cell cell, final String key, final int angle) {
@@ -138,7 +141,7 @@ public abstract class AbstractPlant implements PlantBehaviour {
         sliding(cell.element(key), cell.getCell(1, 1).element(key), angle45);
         sliding(cell.element(key), cell.getCell(1, 0).element(key), angle);
         sliding(cell.element(key), cell.getCell(1, -1).element(key), angle45);
-        sliding(cell.element(key), cell.getCell(0,  1).element(key), angle);
+        sliding(cell.element(key), cell.getCell(0, 1).element(key), angle);
         sliding(cell.element(key), cell.getCell(0, -1).element(key), angle);
         sliding(cell.element(key), cell.getCell(-1, 1).element(key), angle45);
         sliding(cell.element(key), cell.getCell(-1, 0).element(key), angle);
@@ -147,8 +150,9 @@ public abstract class AbstractPlant implements PlantBehaviour {
 
     /**
      * Сползание по склону в 45 град.
-     * @param from откуда
-     * @param to куда
+     *
+     * @param from  откуда
+     * @param to    куда
      * @param angle разница уровней для сползания
      */
     private void sliding(final Element from, final Element to, final double angle) {
