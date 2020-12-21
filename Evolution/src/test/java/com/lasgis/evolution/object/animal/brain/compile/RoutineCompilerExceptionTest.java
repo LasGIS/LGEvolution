@@ -36,16 +36,16 @@ public class RoutineCompilerExceptionTest {
                 + "   1: /****************************\n"
                 + "      ^\n"
                 + "   2:  * Стратегия поедания пищи. *\n"},
-            {421, "середина", "Parser error in(20,19) - середина:\n\n"
+            {402, "середина", "Parser error in(20,19) - середина:\n\n"
                 + "  19: routine smartRunTo(endCell) {\n"
                 + "  20:     until(endCell != nextPoint) {\n"
                 + "                        ^\n"
                 + "  21:         FindWay(endCell) nextPoint;\n"},
-            {509, "конец", "Parser error in(24,1) - конец:\n\n"
+            {486, "конец", "Parser error in(24,1) - конец:\n\n"
                 + "  23:     }\n"
                 + "  24: }\n"
                 + "      ^\n"},
-            {510, "самый кончик", "Parser error in(24,2) - самый кончик:\n\n"
+            {487, "самый кончик", "Parser error in(24,2) - самый кончик:\n\n"
                 + "  23:     }\n"
                 + "  24: }\n"
                 + "       ^\n"}
