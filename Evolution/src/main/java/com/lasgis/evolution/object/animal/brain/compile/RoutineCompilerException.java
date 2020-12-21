@@ -1,35 +1,27 @@
-/**
- * @(#)RoutineCompilerException.java 1.0
+/*
+ * RoutineCompilerException.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal.brain.compile;
 
 /**
  * Ошибка при разборе.
+ *
  * @author Vladimir Laskin
  * @version 1.0
  */
 public class RoutineCompilerException extends Exception {
 
-    /**
-     * Описание одной строки.
-     */
-    private class Line {
-        int count;
-        int beg;
-        int end;
-        String str;
-    }
+    private final Line[] lines = new Line[3];
     private int row = 1;
     private int col = 1;
-    private final Line[] lines = new Line[3];
 
     /**
-     * @param token token
+     * @param token   token
      * @param message описание ошибки
      */
     public RoutineCompilerException(final TokenParser.Token token, final String message) {
@@ -38,18 +30,18 @@ public class RoutineCompilerException extends Exception {
         Line curLine = new Line();
         curLine.beg = 0;
         char ch0 = ' ';
-        int  i = 0;
-        for (; i < token.beg; i++) {
+        int i;
+        for (i = 0; i < token.beg; i++) {
             final char ch = sb.charAt(i);
             if (ch == '\r' || ch == '\n') {
                 if (!(ch0 == '\r' && ch == '\n')) {
                     curLine.end = i;
-                    curLine.count = row++;
+                    curLine.number = row++;
                     lines[0] = lines[1];
                     lines[1] = curLine;
                     curLine = new Line();
-                    curLine.beg = i + 1;
                 }
+                curLine.beg = i + 1;
                 col = 1;
             } else {
                 curLine.end = i;
@@ -63,18 +55,19 @@ public class RoutineCompilerException extends Exception {
             if (ch == '\r' || ch == '\n') {
                 if (!(ch0 == '\r' && ch == '\n')) {
                     curLine.end = i;
-                    curLine.count = row + j - 1;
+                    curLine.number = row + j - 1;
                     lines[j] = curLine;
                     curLine = new Line();
                     curLine.beg = i + 1;
                     j++;
                 }
+                curLine.beg = i + 1;
             } else {
                 curLine.end = i;
             }
             ch0 = ch;
         }
-        for (Line line : lines) {
+        for (final Line line : lines) {
             if (line != null) {
                 line.str = sb.substring(line.beg, line.end);
             }
@@ -82,13 +75,14 @@ public class RoutineCompilerException extends Exception {
     }
 
     /**
-     * .
-<pre>
-19  :     routine smartRunTo(endCell) {
-20  :         until(endCell != nextPoint) {
-                            ^
-21  :             FindWay(endCell) nextPoint;
-</pre>
+     * Строка с ошибкой и указанием на неё.
+     * <pre>
+     * 19  :     routine smartRunTo(endCell) {
+     * 20  :         until(endCell != nextPoint) {
+     *                             ^
+     * 21  :             FindWay(endCell) nextPoint;
+     * </pre>
+     *
      * @return строки с информацией об ошибки
      */
     @Override
@@ -99,7 +93,7 @@ public class RoutineCompilerException extends Exception {
         sb.append(":\n\n");
         for (int i = 0; i < 3; i++) {
             if (lines[i] != null) {
-                sb.append(String.format("%1$4d: %2$s\n", lines[i].count, lines[i].str));
+                sb.append(String.format("%1$4d: %2$s\n", lines[i].number, lines[i].str));
             }
             if (i == 1) {
                 for (int j = 0; j < col + 5; j++) {
@@ -110,5 +104,18 @@ public class RoutineCompilerException extends Exception {
         }
         //sb.append("\n");
         return sb.toString();
+    }
+
+    /**
+     * Описание одной строки.
+     */
+    private static class Line {
+        /**
+         * номер строки
+         */
+        int number;
+        int beg;
+        int end;
+        String str;
     }
 }

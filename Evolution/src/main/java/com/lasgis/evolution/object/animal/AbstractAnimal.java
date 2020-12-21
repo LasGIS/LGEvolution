@@ -1,9 +1,9 @@
-/**
- * @(#)AbstractAnimal.java 1.0
+/*
+ * AbstractAnimal.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal;
@@ -18,9 +18,12 @@ import com.lasgis.evolution.object.animal.organs.Legs;
 import com.lasgis.evolution.object.animal.organs.Stomach;
 import com.lasgis.evolution.panels.Scalable;
 import com.lasgis.util.LGFormatter;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
@@ -32,50 +35,84 @@ import static com.lasgis.evolution.utils.ColorHelper.colorNormal;
 
 /**
  * Общие свойства всех животных.
+ *
  * @author vladimir.laskin
  * @version 1.0
  */
 @Slf4j
-@Info(type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+@Info(type = {InfoType.INFO, InfoType.STAT, InfoType.SAVE})
 public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
 
     protected static final Color SELECTED_COLOR = new Color(255, 0, 0);
 
     static AtomicInteger animalUid = new AtomicInteger(0);
 
-    @Info(name = "кличка", type = { InfoType.SAVE })
-    private String uidName;
-    @Info(name = "широта", type = { InfoType.SAVE })
+    @Info(name = "кличка", type = {InfoType.SAVE})
+    private final String uidName;
+    private final AbstractAnimalManager manager;
+
+    /**
+     * Ноги животного (шевели батонами).
+     */
+    @Info(type = {InfoType.SAVE})
+    @Getter
+    private final Legs legs;
+
+    /**
+     * Желудок.
+     */
+    @Info(name = "Желудок", type = {InfoType.INFO, InfoType.STAT, InfoType.SAVE})
+    protected Stomach stomach;
+
+    @Getter
+    @Setter
+    @Info(name = "широта", type = {InfoType.SAVE})
     private double latitude;
-    @Info(name = "долгота", type = { InfoType.SAVE })
+
+    @Getter
+    @Setter
+    @Info(name = "долгота", type = {InfoType.SAVE})
     private double longitude;
-    private AbstractAnimalManager manager;
+
+    @Getter
+    @Setter
     private boolean selected = false;
 
-    /** Масса. Если она меньше нуля, то животное умирает :( ... */
-    @Info(name = "масса", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    /**
+     * Масса. Если она меньше нуля, то животное умирает :( ...
+     */
+    @Getter
+    @Setter
+    @Info(name = "масса", type = {InfoType.INFO, InfoType.STAT, InfoType.SAVE})
     private double mass;
-    /** Энергия. Если она меньше нуля, то животное засыпает :) ... */
-    @Info(name = "энергия", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+
+    /**
+     * Энергия. Если она меньше нуля, то животное засыпает :) ...
+     */
+    @Getter
+    @Setter
+    @Info(name = "энергия", type = {InfoType.INFO, InfoType.STAT, InfoType.SAVE})
     private double energy;
-    /** Желудок. */
-    @Info(name = "Желудок", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
-    protected Stomach stomach;
-    /** Ноги животного (шевели батонами). */
-    @Info(type = { InfoType.SAVE })
-    private Legs legs;
-    /** Состояние животного. */
-    @Info(name = "состояние", head = "Статистика", type = { InfoType.INFO, InfoType.SAVE })
+
+    /**
+     * Состояние животного.
+     */
+    @Getter
+    @Setter
+    @Info(name = "состояние", head = "Статистика", type = {InfoType.INFO, InfoType.SAVE})
     private AnimalState state;
 
-    /** пропускаем ход до этого времени. */
+    /**
+     * пропускаем ход до этого времени.
+     */
     private long skip2NanoTime;
 
     /**
      * В момент создания присваиваем уникальное имя.
-     * @param latitude широта точки
+     *
+     * @param latitude  широта точки
      * @param longitude долгота точки
-     * @param manager сохраняем менеджер для рождения и умирания
+     * @param manager   сохраняем менеджер для рождения и умирания
      */
     protected AbstractAnimal(final double latitude, final double longitude, final AbstractAnimalManager manager) {
         uidName = manager.getName() + '_' + animalUid.incrementAndGet();
@@ -88,7 +125,19 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
     }
 
     /**
+     * Передать потомку свой немного изменённый ген.
+     *
+     * @param gene ген родителя
+     * @return ген потомка
+     */
+    public static double inheritGene(final double gene) {
+        final double random = (Math.random() - 0.5) * gene * 5 / 100;
+        return gene + random;
+    }
+
+    /**
      * Вернуть уникальное имя животного.
+     *
      * @return уникальное имя животного.
      */
     public String getUniqueName() {
@@ -109,15 +158,17 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
 
     /**
      * элементарное движение животного.
+     *
      * @return if false then died
      */
     protected abstract boolean action();
 
     /**
      * Рисуем животное в своём состоянии.
+     *
      * @param graphics контекст вывода.
      * @param interval квадратный диапазон,
-     * в который должно входить животное
+     *                 в который должно входить животное
      */
     public abstract void draw(Graphics graphics, Scalable interval);
 
@@ -130,20 +181,6 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
         return manager;
     }
 
-    public Legs getLegs() {
-        return legs;
-    }
-
-    @Override
-    public double getLatitude() {
-        return latitude;
-    }
-
-    @Override
-    public void setLatitude(final double latitude) {
-        this.latitude = latitude;
-    }
-
     @Override
     public void changeLatitude(final double value) {
         latitude += value;
@@ -152,16 +189,6 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
         } else if (latitude < 0) {
             latitude += Parameters.MAX_LATITUDE;
         }
-    }
-
-    @Override
-    public double getLongitude() {
-        return longitude;
-    }
-
-    @Override
-    public void setLongitude(final double longitude) {
-        this.longitude = longitude;
     }
 
     @Override
@@ -179,22 +206,16 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
         return CellHelper.getCell(getLatitude(), getLongitude());
     }
 
-    public double getMass() {
-        return mass;
-    }
-
-    public void setMass(final double mass) {
-        this.mass = mass;
-    }
-
     /**
      * Вся масса, вместе с желудком и кишками.
+     *
      * @return Вся масса
      */
     public abstract double getFullMass();
 
     /**
      * Изменяем (добавляем или уменьшаем) массу.
+     *
      * @param delta добавочная масса
      * @return полученная масса
      */
@@ -206,16 +227,9 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
         return mass;
     }
 
-    public double getEnergy() {
-        return energy;
-    }
-
-    public void setEnergy(final double energy) {
-        this.energy = energy;
-    }
-
     /**
      * Изменяем (добавляем или уменьшаем) энергию.
+     *
      * @param delta добавочная энергия
      * @return полученная энергия
      */
@@ -225,22 +239,6 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
             energy = 0;
         }
         return energy;
-    }
-
-    public AnimalState getState() {
-        return state;
-    }
-
-    public void setState(final AnimalState state) {
-        this.state = state;
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(final boolean selected) {
-        this.selected = selected;
     }
 
     public long getSkip2NanoTime() {
@@ -253,6 +251,7 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
 
     /**
      * добавляем время для пропуска.
+     *
      * @param skipNanoTime время для пропуска
      */
     public void addSkipNanoTime(final long skipNanoTime) {
@@ -261,9 +260,10 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
 
     /**
      * Вычисляем цвет по рейтингу.
+     *
      * @param firstColor начальный цвет
-     * @param lastColor конечный цвет
-     * @param ratio рейтинг
+     * @param lastColor  конечный цвет
+     * @param ratio      рейтинг
      * @return вычисленный цвет
      */
     protected Color calcColor(final Color firstColor, final Color lastColor, final double ratio) {
@@ -271,16 +271,6 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
         final int green = colorNormal(firstColor.getGreen() + (lastColor.getGreen() - firstColor.getGreen()) * ratio);
         final int blue = colorNormal(firstColor.getBlue() + (lastColor.getBlue() - firstColor.getBlue()) * ratio);
         return new Color(red, green, blue);
-    }
-
-    /**
-     * Передать потомку свой немного изменённый ген.
-     * @param gene ген родителя
-     * @return ген потомка
-     */
-    public static double inheritGene(final double gene) {
-        final double random = (Math.random() - 0.5) * gene * 5 / 100;
-        return gene + random;
     }
 
     @Override
@@ -329,24 +319,23 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
                 field.setAccessible(true);
                 try {
                     switch (field.getType().getName()) {
-                        case "int" :
+                        case "int":
                             if (info.rate() == 1) {
                                 value = Integer.toString(field.getInt(obj));
                             } else {
                                 value = LGFormatter.format(field.getDouble(obj) * info.rate());
                             }
                             break;
-                        case "double" :
+                        case "double":
                             value = LGFormatter.format(field.getDouble(obj) * info.rate());
                             break;
-                        case "java.lang.String" :
+                        case "java.lang.String":
                             value = (java.lang.String) field.get(obj);
                             break;
                         default:
                             final Object fieldObj = field.get(obj);
                             if (fieldObj instanceof Map) {
-                                @SuppressWarnings("unchecked")
-                                final Map<Object, Object> map = (Map<Object, Object>) fieldObj;
+                                @SuppressWarnings("unchecked") final Map<Object, Object> map = (Map<Object, Object>) fieldObj;
                                 for (Map.Entry<Object, Object> entry : map.entrySet()) {
                                     final String key = entry.getKey().toString();
                                     final String valStr;

@@ -1,9 +1,9 @@
-/**
- * @(#)RoutineFactoryTest.java 1.0
+/*
+ * RoutineFactoryTest.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2014 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal.brain;
@@ -53,6 +53,6 @@ public class RoutineFactoryTest {
         final StringBuilder program = RoutineFactory.testActualRoutinesPreprocessor(
             animal, new SimpleBindings(), "TestInclude.rout", true
         );
-        Assert.assertEquals(program.toString(), expectedProgram.toString());
+        Assert.assertEquals(program.toString().replace("\r\n", "\n"), expectedProgram.toString());
     }
 }

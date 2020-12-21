@@ -1,15 +1,16 @@
-/**
- * @(#)InfoType.java 1.0
+/*
+ * InfoType.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2014 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object;
 
 /**
  * Тип обработки, для Info аннотации.
+ *
  * @author Vladimir Laskin
  * @version 1.0
  */
