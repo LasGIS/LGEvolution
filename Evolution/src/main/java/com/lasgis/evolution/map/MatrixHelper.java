@@ -1,13 +1,17 @@
-/**
- * @(#)MatrixHelper.java 1.0
+/*
+ * MatrixHelper.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.map;
 
+import com.lasgis.evolution.object.EvolutionConstants;
+import com.lasgis.evolution.object.Info;
+import com.lasgis.evolution.object.InfoType;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,31 +21,63 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The Class MatrixHelper.
+ *
  * @author vladimir.laskin
  * @version 1.0
  */
+@Slf4j
 public class MatrixHelper {
+
+    public static final Set<String> KEYS_ACCESSIBLE_FOR_SAVE = getKeysAccessibleForSave();
 
     private MatrixHelper() {
     }
 
+    private static Set<String> getKeysAccessibleForSave() {
+        final Field[] fields = EvolutionConstants.class.getDeclaredFields();
+        return Arrays.stream(fields).filter(field -> {
+            final Info info = field.getAnnotation(Info.class);
+            if (info != null && field.getType().getName().equals("java.lang.String")) {
+                for (InfoType infoType : info.type()) {
+                    if (infoType == InfoType.SAVE) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }).map(field -> {
+            try {
+                return (String) field.get(null);
+            } catch (IllegalAccessException ex) {
+                log.error(ex.getMessage(), ex);
+            }
+            return null;
+        }).collect(Collectors.toSet());
+    }
+
     /**
      * Сохраняем текущий контекст в файл.
+     *
      * @param fileName имя файла
-     * @throws IOException IO Exception
+     * @throws IOException   IO Exception
      * @throws JSONException JSON Exception
      */
     public static void matrixContextSave(String fileName) throws IOException, JSONException {
-        FileWriter fw = new FileWriter(fileName);
+        final FileWriter fw = new FileWriter(fileName);
         fw.write("{\"matrix\":[");
         boolean isFirst = true;
         for (int y = 0; y < Matrix.MATRIX_SIZE_Y; y++) {
             for (int x = 0; x < Matrix.MATRIX_SIZE_X; x++) {
-                Cell cell = Matrix.getMatrix().getCell(x, y);
+                final Cell cell = Matrix.getMatrix().getCell(x, y);
+                assert cell != null;
                 if (!cell.isEmpty()) {
                     if (isFirst) {
                         fw.write("{");
@@ -67,9 +103,10 @@ public class MatrixHelper {
 
     /**
      * Загружаем контекст из ранее сохранённого файла.
+     *
      * @param fileName имя файла
      * @throws FileNotFoundException File Not Found Exception
-     * @throws JSONException JSON Exception
+     * @throws JSONException         JSON Exception
      */
     public static void matrixContextLoad(final String fileName) throws FileNotFoundException, JSONException {
         final FileReader reader = new FileReader(fileName);

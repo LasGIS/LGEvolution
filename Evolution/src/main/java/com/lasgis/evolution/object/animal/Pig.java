@@ -1,9 +1,9 @@
-/**
- * @(#)Pig.java 1.0
+/*
+ * Pig.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal;
@@ -20,9 +20,12 @@ import com.lasgis.evolution.object.animal.organs.Legs;
 import com.lasgis.evolution.object.animal.organs.Stomach;
 import com.lasgis.evolution.panels.Scalable;
 import com.lasgis.util.LGFormatter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,27 +64,42 @@ public class Pig extends AbstractAnimal implements CallBack, EvolutionConstants 
     // параметры, определяемые геномом
     /** минимальное количество травы для начала поедания. */
     @Info(name = "минимум пищи", head = "ГЕНОТИП", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    @Setter
     private double minGrassForEat = 20;
+
     /** остающееся количество травы после поедания. */
     @Info(name = "остаток пищи", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    @Setter
     private double minGrassLeave = 10;
+
     /** Энергия бега за едой. */
     @Info(name = "энергия бега", rate = 1000, type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    @Setter
     private double runEnergy = 0.21;
+
     /** Энергия передвижения в момент задумчивости. */
     @Info(name = "энергия пешком", rate = 1000, type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    @Setter
     private double walkEnergy = 0.07;
+
     /** Необходимая масса для начала родов. */
     @Info(name = "масса родителя", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    @Setter
     private double birthMass = 300;
+
     /** Начальная масса новой свиньи. */
     @Info(name = "масса детеныша", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    @Setter
     private double birthBabyMass = 50;
+
     /** Время жизни свиньи. */
     @Info(name = "время жизни", rate = .01, type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
+    @Setter
     private double maximalAge = 10000.0;
-    /** Это ссылка на вождя. */
+
+    //** Это ссылка на вождя. */
     //private Pig leader = null;
+
     /** число пропусков еды по причине лидера. */
     @Info(type = InfoType.SAVE)
     private int notEatCount = 0;
@@ -113,8 +131,6 @@ public class Pig extends AbstractAnimal implements CallBack, EvolutionConstants 
     /**
      * Поиск лидера группы.
      * @return лидера
-     */
-/*
     private Pig getLeader() {
         if (leader != null && leader.getState() != died
             && getCell().distance(leader.getCell()) < Matrix.CELL_SIZE * 10 && notEatCount < 10) {
@@ -145,40 +161,10 @@ public class Pig extends AbstractAnimal implements CallBack, EvolutionConstants 
     /**
      * Это лидер!
      * @ return true если это лидер.
-     */
-/*
     public boolean isLeader() {
         return leader != null && leader.equals(this);
     }
 */
-
-    public void setMinGrassForEat(final double minGrassForEat) {
-        this.minGrassForEat = minGrassForEat;
-    }
-
-    public void setMinGrassLeave(final double minGrassLeave) {
-        this.minGrassLeave = minGrassLeave;
-    }
-
-    public void setRunEnergy(final double runEnergy) {
-        this.runEnergy = runEnergy;
-    }
-
-    public void setWalkEnergy(final double walkEnergy) {
-        this.walkEnergy = walkEnergy;
-    }
-
-    public void setBirthMass(final double birthMass) {
-        this.birthMass = birthMass;
-    }
-
-    public void setBirthBabyMass(final double birthBabyMass) {
-        this.birthBabyMass = birthBabyMass;
-    }
-
-    public void setMaximalAge(final double maximalAge) {
-        this.maximalAge = maximalAge;
-    }
 
     @Override
     public void incDines() {

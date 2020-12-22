@@ -1,9 +1,9 @@
-/**
- * @(#)Cell.java 1.0
+/*
+ * Cell.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.map;
@@ -16,10 +16,13 @@ import com.lasgis.evolution.object.InfoType;
 import com.lasgis.evolution.object.LiveObjectManager;
 import com.lasgis.evolution.object.PlantBehaviour;
 import com.lasgis.util.LGFormatter;
+import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static com.lasgis.evolution.map.MatrixHelper.KEYS_ACCESSIBLE_FOR_SAVE;
 
 /**
  * Ячейка карты. Эта ячейка содержит список различных элементов
@@ -38,21 +43,39 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Info(type = InfoType.SAVE)
 public class Cell implements IInterval2D {
 
-    /** индекс широты ячейки 0 - это юг, 100 - это север. */
+    private static final Object[][] FORBIDDEN_PLANTS = new Object[][]{
+        {EvolutionConstants.BARLEY_PLANT_KEY, 1.0},
+        {EvolutionConstants.GRASS_PLANT_KEY, 1.0},
+        {EvolutionConstants.CHAMOMILE_LEAF_KEY, 1.1},
+        {EvolutionConstants.CHAMOMILE_FLOWER_KEY, 5.0},
+        {EvolutionConstants.NECTAR_KEY, 10.0},
+    };
+    /**
+     * индекс широты ячейки 0 - это юг, 100 - это север.
+     */
     @Info(type = InfoType.SAVE)
-    private int indX;
-    /** индекс долгота ячейки 0 - это запад, 100 - это восток. */
+    @Getter
+    private final int indX;
+    /**
+     * индекс долгота ячейки 0 - это запад, 100 - это восток.
+     */
     @Info(type = InfoType.SAVE)
-    private int indY;
-    /** именованный список элементов. */
+    @Getter
+    private final int indY;
+    /**
+     * именованный список элементов.
+     */
     @Info(type = InfoType.SAVE)
     private Map<String, Element> elements = new ConcurrentHashMap<>();
-    /** именованный список элементов. */
+    /**
+     * именованный список элементов.
+     */
     @Info(type = InfoType.SAVE)
     private CopyOnWriteArrayList<AnimalBehaviour> animals = new CopyOnWriteArrayList<>();
 
     /**
      * Создание ячейки по нижнему левому углу.
+     *
      * @param indexX индекс ячейки по широте (от низа - юг)
      * @param indexY индекс ячейки по долготе (от левого края - запад)
      */
@@ -62,24 +85,9 @@ public class Cell implements IInterval2D {
     }
 
     /**
-     * Вернуть индекс ячейки по широте (от низа - юг).
-     * @return индекс ячейки по широте
-     */
-    public int getIndX() {
-        return indX;
-    }
-
-    /**
-     * Вернуть индекс ячейки по долготе (от левого края - запад).
-     * @return индекс ячейки по долготе
-     */
-    public int getIndY() {
-        return indY;
-    }
-
-    /**
      * Возвращаем элемент по его коду.
      * Если элемента нет, то добавляем его.
+     *
      * @param code код элемента
      * @return элемент
      */
@@ -114,7 +122,8 @@ public class Cell implements IInterval2D {
 
     /**
      * Рисовать ячейку.
-     * @param gr графический контекст
+     *
+     * @param gr  графический контекст
      * @param rec прямоугольник для заполнения
      */
     public void drawPlant(final Graphics gr, final Rectangle rec) {
@@ -148,7 +157,7 @@ public class Cell implements IInterval2D {
     public final Cell[] near(final int sight) {
         final NearPoint[] nearPoints = CellHelper.getNearPoints(sight, false);
         final Cell[] cells = new Cell[nearPoints.length];
-        for (int i = 0; i < nearPoints.length; i++)  {
+        for (int i = 0; i < nearPoints.length; i++) {
             cells[i] = this.getCell(nearPoints[i]);
         }
         return cells;
@@ -156,6 +165,7 @@ public class Cell implements IInterval2D {
 
     /**
      * Вернуть ячейку, по смещениям относительно данной ячейки.
+     *
      * @param delX смещение по x
      * @param delY смещение по y
      * @return ячейка, смещенная от этой
@@ -166,8 +176,9 @@ public class Cell implements IInterval2D {
 
     /**
      * Вернуть ячейку, по смещениям относительно данной ячейки.
+     *
      * @param pnt смещение по оси X (положительное смещение вверх)
-     * и по оси Y (положительное смещение вправо)
+     *            и по оси Y (положительное смещение вправо)
      * @return ячейка
      */
     public Cell getCell(final NearPoint pnt) {
@@ -176,6 +187,7 @@ public class Cell implements IInterval2D {
 
     /**
      * Вернуть ячейку, по смещениям относительно данной ячейки.
+     *
      * @param delX смещение по оси X (положительное смещение вверх)
      * @param delY смещение по оси Y (положительное смещение вправо)
      * @return ячейка
@@ -188,6 +200,7 @@ public class Cell implements IInterval2D {
 
     /**
      * расстояние от данной ячейки до предлагаемой.
+     *
      * @param to предлагаемая ячейка
      * @return расстояние
      */
@@ -205,6 +218,7 @@ public class Cell implements IInterval2D {
 
     /**
      * Вернуть список элементов с их значениями для этой ячейки.
+     *
      * @param sb входной StringBuilder для записи
      * @return список элементов с их значениями
      */
@@ -223,23 +237,29 @@ public class Cell implements IInterval2D {
 
     /**
      * Вернуть список элементов с их значениями для этой ячейки.
+     *
      * @return список элементов с их значениями
      * @throws JSONException JSON Exception
      */
     public JSONObject getJsonElements() throws JSONException {
         final JSONObject json = new JSONObject();
         for (Map.Entry<String, Element> element : elements.entrySet()) {
-            json.put(element.getKey(), element.getValue().value());
+            final String key = element.getKey();
+            final Double value = element.getValue().value();
+            if (KEYS_ACCESSIBLE_FOR_SAVE.contains(key) && value != 0.0) {
+                json.put(key, value);
+            }
         }
         return json;
     }
 
     /**
      * Вернуть список элементов с их значениями для этой ячейки.
+     *
      * @return список элементов с их значениями
      */
     public Map<String, Double> getMapElements() {
-        final Map<String, Double> map = new HashMap<String, Double>();
+        final Map<String, Double> map = new HashMap<>();
         for (Map.Entry<String, Element> element : elements.entrySet()) {
             map.put(element.getKey(), element.getValue().value());
         }
@@ -248,6 +268,7 @@ public class Cell implements IInterval2D {
 
     /**
      * Check on empty elements for this cell.
+     *
      * @return true if all elements have zero value
      */
     public boolean isEmpty() {
@@ -261,6 +282,7 @@ public class Cell implements IInterval2D {
 
     /**
      * возвращаем Уникальный ключ ячейки.
+     *
      * @return ключ ячейки
      */
     public String getKey() {
@@ -270,6 +292,7 @@ public class Cell implements IInterval2D {
     /**
      * Получить доступ к животным в данной ячейке.
      * Добавлять или удалять животных можно только через Cell.
+     *
      * @return список животных в этой ячейке
      */
     public final List<AnimalBehaviour> getAnimals() {
@@ -287,7 +310,6 @@ public class Cell implements IInterval2D {
     }
 
     /**
-     *
      * @param animal element to be removed from this list, if present
      * @return <tt>true</tt> if this list contained the specified element
      */
@@ -319,6 +341,7 @@ public class Cell implements IInterval2D {
     /**
      * Коэффициент трудности перемещения. От 0..1.
      * Если > 1, то животное бежит быстрее паровоза.
+     *
      * @return коэффициент трудности перемещения
      */
     public double moveTrouble() {
@@ -339,16 +362,9 @@ public class Cell implements IInterval2D {
         return "Cell{X=" + indX + ", Y=" + indY + '}';
     }
 
-    private static final Object[][] FORBIDDEN_PLANTS = new Object[][] {
-        {EvolutionConstants.BARLEY_PLANT_KEY, 1.0},
-        {EvolutionConstants.GRASS_PLANT_KEY, 1.0},
-        {EvolutionConstants.CHAMOMILE_LEAF_KEY, 1.1},
-        {EvolutionConstants.CHAMOMILE_FLOWER_KEY, 5.0},
-        {EvolutionConstants.NECTAR_KEY, 10.0},
-    };
-
     /**
      * Фактор препятствующий росту растений.
+     *
      * @param excludePlants исключая эти
      * @return число условных конкурентов
      */
@@ -366,6 +382,7 @@ public class Cell implements IInterval2D {
 
     /**
      * Мусор, препятствующий росту.
+     *
      * @return число условного мусора
      */
     public double obstacle() {

@@ -1,9 +1,9 @@
-/**
- * @(#)MainFrame.java 1.0
+/*
+ * MainFrame.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.panels;
@@ -18,11 +18,28 @@ import com.lasgis.util.SettingToolBarItem;
 import com.lasgis.util.Util;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FileDialog;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import static com.lasgis.evolution.object.EvolutionConstants.*;
+import static com.lasgis.evolution.object.EvolutionConstants.CHAMOMILE_LEAF_KEY;
+import static com.lasgis.evolution.object.EvolutionConstants.GRASS_PLANT_KEY;
+import static com.lasgis.evolution.object.EvolutionConstants.GROUND_KEY;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,11 +56,11 @@ public class MainFrame extends JFrame implements ComponentListener {
     /** размеры строки состояния. */
     private static final int[] STATUS_BAR_SIZES = new int[] {0, 100, 200};
     /** Строка состояния. */
-    private StatusBar jStatusBar = new StatusBar(STATUS_BAR_SIZES);
+    private final StatusBar jStatusBar = new StatusBar(STATUS_BAR_SIZES);
     /** Панель с картой. */
-    private MapPanel mapPanel = new MapPanel();
+    private final MapPanel mapPanel = new MapPanel();
     /** панель конфигурации. */
-    private ConfigPanel configPanel;
+    private final ConfigPanel configPanel = new ConfigPanel();
 
     /** ширина кнопки на главной панели инструментов. */
     private static final int TOOL_BAR_WIDTH = 27;
@@ -56,13 +73,13 @@ public class MainFrame extends JFrame implements ComponentListener {
             "File", "openFile.gif", "", null,
             new SettingMenuItem[] {
                 new SettingMenuItem(
-                    "Load Matrix", "openFile.gif", "читаем матрицу", MainFrame.this::jMenuContextLoad, null
+                    "Load Matrix", "openFile.gif", "читаем матрицу", this::jMenuContextLoad, null
                 ),
                 new SettingMenuItem(
-                    "Save Matrix", "closeFile.gif", "запоминаем матрицу", MainFrame.this::jMenuContextSave, null
+                    "Save Matrix", "closeFile.gif", "запоминаем матрицу", this::jMenuContextSave, null
                 ),
                 new SettingMenuItem(
-                    "Exit", null, "Закрываем приложение", MainFrame.this::jMenuFileExitAction, null
+                    "Exit", null, "Закрываем приложение", this::jMenuFileExitAction, null
                 ),
             }
         ),
@@ -70,7 +87,7 @@ public class MainFrame extends JFrame implements ComponentListener {
             "Help", "help.gif", "Всякого рода вспоможение", null,
             new SettingMenuItem[] {
                 new SettingMenuItem(
-                    "About", "help.gif", "Кто ЭТО сделал!", MainFrame.this::jMenuHelpAboutAction, null
+                    "About", "help.gif", "Кто ЭТО сделал!", this::jMenuHelpAboutAction, null
                 )
             }
         )
@@ -138,7 +155,6 @@ public class MainFrame extends JFrame implements ComponentListener {
             contentPane.add(toolBar, BorderLayout.NORTH);
             contentPane.add(jStatusBar, BorderLayout.SOUTH);
             contentPane.add(splitPane, BorderLayout.CENTER);
-            configPanel = new ConfigPanel();
             splitPane.add(configPanel, JSplitPane.RIGHT);
             splitPane.add(mapPanel, JSplitPane.LEFT);
             splitPane.setLastDividerLocation(size.width - 250);
@@ -234,7 +250,7 @@ public class MainFrame extends JFrame implements ComponentListener {
     }
 
     /**
-     * .
+     * Сохраняем матрицу .
      * @param event Action Event
      */
     public void jMenuContextSave(final ActionEvent event) {
@@ -246,7 +262,9 @@ public class MainFrame extends JFrame implements ComponentListener {
         dlg.setVisible(true);
         if (dlg.getFile() != null) {
             try {
-                MatrixHelper.matrixContextSave(dlg.getDirectory() + dlg.getFile());
+                final String directory = dlg.getDirectory();
+                String file = dlg.getFile();
+                MatrixHelper.matrixContextSave(directory + file + (file.toLowerCase().endsWith(".json") ? "" : ".json"));
             } catch (final Exception ex) {
                 log.error(ex.getMessage(), ex);
             }

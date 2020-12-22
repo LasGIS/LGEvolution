@@ -1,9 +1,9 @@
-/**
- * @(#)ConfigPanel.java 1.0
+/*
+ * ConfigPanel.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.panels;
@@ -16,14 +16,23 @@ import com.lasgis.util.SettingMenuItem;
 import com.lasgis.util.Util;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -43,18 +52,22 @@ public class ConfigPanel extends JPanel implements
     TreeSelectionListener, TreeExpansionListener, MouseWheelListener, MouseListener {
 
     /** корневой узел дерева. */
-    private DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+    private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+
     /** дерево конфигурации. */
-    private JTree tree;
+    private final JTree tree;
+
     /** панель для прокрутки дерева. */
-    private JScrollPane treeScroll;
+    private final JScrollPane treeScroll;
+
     /** панель для информации об ячейках. */
     private final JTextArea plantInfo = new JTextArea();
+
     /** панель для информации о животных. */
     private final JTextArea animalInfo = new JTextArea();
 
     /** Настройка выпадающего меню. */
-    private SettingMenuItem[] setPopUpMenu = {
+    private final SettingMenuItem[] setPopUpMenu = {
         new SettingMenuItem(
             "Visible", null, "Сделать выделенные слои видимыми/невидимыми", this::jMenuSetUnVisibleAction,
             null
@@ -77,7 +90,7 @@ public class ConfigPanel extends JPanel implements
      * @param e  {@link java.awt.event.ActionEvent}
      */
     public void jMenuSetUnVisibleAction(final ActionEvent e) {
-        final String comm = e.getActionCommand();
+//        final String comm = e.getActionCommand();
     }
 
     /**

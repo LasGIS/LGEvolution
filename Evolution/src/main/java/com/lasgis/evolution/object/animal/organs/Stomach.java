@@ -1,9 +1,9 @@
-/**
- * @(#)Stomach.java 1.0
+/*
+ * Stomach.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal.organs;
@@ -15,7 +15,7 @@ import com.lasgis.evolution.object.InfoType;
 import com.lasgis.evolution.object.animal.AbstractAnimal;
 import com.lasgis.util.LGFormatter;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,19 +60,25 @@ public class Stomach {
     /** Размер желудка в процентах от общей массы животного. */
     @Info(name = "Размер желудка", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     private double massPercent;
+
     /** масса травы, овса или мяса, находящаяся в желудке. */
     @Info(name = "масса", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     private HashMap<String, Double> stomach = new HashMap<>();
+
     /** Степень переваривания отдельных видов пищи. */
     @Info(name = "степень", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     private HashMap<String, Double> digestion = new HashMap<>();
+
     /** масса фекалий, находящаяся в кишках. Если масса превышает порог, то необходима defecation */
     @Info(name = "масса фекалий", type = { InfoType.INFO, InfoType.SAVE })
     private double intestine = 0;
+
     /** коэффициент влияющий на выбор самого вкусного места. Чем он больше, тем ближе выбор. */
     @Info(name = "фактор дистанции.", rate = 100., type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     private double distanceFactor = 0.5;
+
     private AbstractAnimal owner;
+
     /** цвет животного, различный от перевариваемости той или иной пищи. */
     private static final HashMap<String, Color> ANIMAL_COLORS = new HashMap<>();
 
