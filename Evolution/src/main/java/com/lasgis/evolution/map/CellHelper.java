@@ -1,9 +1,9 @@
-/**
- * @(#)CellHelper.java 1.0
+/*
+ * CellHelper.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.map;
@@ -133,7 +133,7 @@ public final class CellHelper {
      */
     public static Cell getCell(final int x, final int y) {
         if (x >= 0 && x < Matrix.MATRIX_SIZE_X && y >= 0 && y < Matrix.MATRIX_SIZE_Y) {
-            return Matrix.getMatrix().getCell(x, y);
+            return Matrix.cell(x, y);
         } else {
             final int xc, yc;
             if (x < 0) {
@@ -150,7 +150,7 @@ public final class CellHelper {
             } else {
                 yc = y;
             }
-            return Matrix.getMatrix().getCell(xc, yc);
+            return Matrix.cell(xc, yc);
         }
     }
 

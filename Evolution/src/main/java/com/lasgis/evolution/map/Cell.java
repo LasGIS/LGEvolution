@@ -66,7 +66,7 @@ public class Cell implements IInterval2D {
      * именованный список элементов.
      */
     @Info(type = InfoType.SAVE)
-    private Map<String, Element> elements = new ConcurrentHashMap<>();
+    private final Map<String, Element> elements = new ConcurrentHashMap<>();
     /**
      * именованный список элементов.
      */
@@ -195,7 +195,7 @@ public class Cell implements IInterval2D {
     public final Cell getCell(final int delX, final int delY) {
         final int nx = (Matrix.MATRIX_SIZE_X + indX + delX) % Matrix.MATRIX_SIZE_X;
         final int ny = (Matrix.MATRIX_SIZE_Y + indY + delY) % Matrix.MATRIX_SIZE_Y;
-        return Matrix.getMatrix().getCell(nx, ny);
+        return Matrix.cell(nx, ny);
     }
 
     /**
@@ -389,5 +389,12 @@ public class Cell implements IInterval2D {
         return element(EvolutionConstants.EXCREMENT_KEY).value()
             + element(EvolutionConstants.ROAD_KEY).value() * 5
             + element(EvolutionConstants.STONE_KEY).value() * 5;
+    }
+
+    /**
+     * Очищаем содержимое.
+     */
+    public void clear() {
+        elements.clear();
     }
 }

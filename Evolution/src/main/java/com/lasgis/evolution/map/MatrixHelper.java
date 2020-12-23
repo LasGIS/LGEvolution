@@ -76,7 +76,7 @@ public class MatrixHelper {
         boolean isFirst = true;
         for (int y = 0; y < Matrix.MATRIX_SIZE_Y; y++) {
             for (int x = 0; x < Matrix.MATRIX_SIZE_X; x++) {
-                final Cell cell = Matrix.getMatrix().getCell(x, y);
+                final Cell cell = Matrix.cell(x, y);
                 assert cell != null;
                 if (!cell.isEmpty()) {
                     if (isFirst) {
@@ -112,12 +112,13 @@ public class MatrixHelper {
         final FileReader reader = new FileReader(fileName);
         JSONObject json = new JSONObject(new JSONTokener(reader));
         final JSONArray array = json.getJSONArray("matrix");
+        Matrix.clear();
         for (int i = 0; i < array.length(); i++) {
             json = array.getJSONObject(i);
             final int x = json.getInt("x");
             final int y = json.getInt("y");
             final JSONObject elements = json.getJSONObject("elements");
-            final Cell cell = Matrix.getMatrix().getCell(x, y);
+            final Cell cell = Matrix.cell(x, y);
             if (cell != null) {
                 final Iterator itr = elements.keys();
                 while (itr.hasNext()) {

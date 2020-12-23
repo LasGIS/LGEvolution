@@ -208,11 +208,11 @@ public class MainFrame extends JFrame implements ComponentListener {
      * Первоначальная инициализация матрицы.
      */
     private void matrixInitialise() {
-        Cell cell = Matrix.getMatrix().getCell(25, 25);
+        Cell cell = Matrix.cell(25, 25);
         cell.element(GROUND_KEY).incValue(5000);
         cell.element(GRASS_PLANT_KEY).incValue(30);
 
-        cell = Matrix.getMatrix().getCell(25, 50);
+        cell = Matrix.cell(25, 50);
         cell.element(GROUND_KEY).incValue(5000);
         cell.element(CHAMOMILE_LEAF_KEY).incValue(30);
     }

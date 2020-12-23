@@ -1,9 +1,9 @@
-/**
- * @(#)Matrix.java 1.0
+/*
+ * Matrix.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.map;
@@ -49,13 +49,14 @@ public final class Matrix {
     }
 
     /**
-     * Вернуть ячейку по индексам.
-     * @param x индекс широты ячейки
-     * @param y индекс долготы ячейки
-     * @return ячейка или NULL если вышли из диапазона
+     * Очищаем каждую ячейку матрицы.
      */
-    public Cell getCell(final int x, final int y) {
-        return isValidIndex(x, y) ? cells[x][y] : null;
+    public static void clear() {
+        for (int x = 0; x < MATRIX_SIZE_X; x++) {
+            for (int y = 0; y < MATRIX_SIZE_Y; y++) {
+                MATRIX.cells[x][y].clear();
+            }
+        }
     }
 
     /**
@@ -64,7 +65,16 @@ public final class Matrix {
      * @param y индекс долготы ячейки
      * @return ячейка или NULL если вышли из диапазона
      */
-    public boolean isValidIndex(final int x, final int y) {
+    public static Cell cell(final int x, final int y) {
+        return isValidIndex(x, y) ? MATRIX.cells[x][y] : null;
+    }
+    /**
+     * Проверяем: попали в матрицу или нет
+     * @param x индекс широты ячейки
+     * @param y индекс долготы ячейки
+     * @return true если попали
+     */
+    public static boolean isValidIndex(final int x, final int y) {
         return x >= 0 && x < MATRIX_SIZE_X && y >= 0 && y < MATRIX_SIZE_Y;
     }
 }
