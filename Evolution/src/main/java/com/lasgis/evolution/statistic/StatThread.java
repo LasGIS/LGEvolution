@@ -1,17 +1,15 @@
-/**
- * @(#)StatThread.java 1.0
+/*
+ * StatThread.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.statistic;
 
 import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.map.CellIterator;
-import com.lasgis.evolution.object.AnimalBehaviour;
-import com.lasgis.evolution.object.AnimalManipulator;
 import com.lasgis.evolution.object.Info;
 import com.lasgis.evolution.object.InfoType;
 import com.lasgis.evolution.object.LiveObjectManager;
@@ -150,17 +148,14 @@ public class StatThread implements Runnable {
     /** обрабатываем динамичные объекты (животные). **/
     private void treatAnimal(final StringBuilder sb) {
 
-        LiveObjectManager.manipulationAnimals(new AnimalManipulator() {
-            @Override
-            public void manipulate(final AnimalBehaviour animal) {
-                final String key = animal.getManager().getName();
-                StatAnimal stat = mapAnimal.get(key);
-                if (stat == null) {
-                    stat = new StatAnimal(key);
-                    mapAnimal.put(key, stat);
-                }
-                stat.statistic(animal);
+        LiveObjectManager.manipulationAnimals(animal -> {
+            final String key = animal.getManager().getName();
+            StatAnimal stat = mapAnimal.get(key);
+            if (stat == null) {
+                stat = new StatAnimal(key);
+                mapAnimal.put(key, stat);
             }
+            stat.statistic(animal);
         });
         sb.append("\"животные\" : {\n");
         for (Map.Entry<String, StatAnimal> entry : mapAnimal.entrySet()) {

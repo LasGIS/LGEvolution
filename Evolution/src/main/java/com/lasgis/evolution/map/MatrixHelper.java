@@ -8,9 +8,11 @@
 
 package com.lasgis.evolution.map;
 
+import com.lasgis.evolution.object.AnimalBehaviour;
 import com.lasgis.evolution.object.EvolutionConstants;
 import com.lasgis.evolution.object.Info;
 import com.lasgis.evolution.object.InfoType;
+import com.lasgis.evolution.object.LiveObjectManager;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,8 +24,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -70,9 +74,26 @@ public class MatrixHelper {
      * @throws IOException   IO Exception
      * @throws JSONException JSON Exception
      */
-    public static void matrixContextSave(String fileName) throws IOException, JSONException {
+    public static void matrixContextSave(final String fileName) throws IOException, JSONException {
         final FileWriter fw = new FileWriter(fileName);
-        fw.write("{\"matrix\":[");
+        fw.write("{");
+        saveMatrixElements(fw);
+        fw.write(",\n");
+        saveAnimals(fw);
+        fw.write("}");
+        fw.flush();
+        fw.close();
+    }
+
+    /**
+     * Сохраняем Элементы матрицы.
+     *
+     * @param fw FileWriter
+     * @throws IOException   IO Exception
+     * @throws JSONException JSON Exception
+     */
+    public static void saveMatrixElements(final FileWriter fw) throws IOException, JSONException {
+        fw.write("\"matrix\":[");
         boolean isFirst = true;
         for (int y = 0; y < Matrix.MATRIX_SIZE_Y; y++) {
             for (int x = 0; x < Matrix.MATRIX_SIZE_X; x++) {
@@ -96,9 +117,35 @@ public class MatrixHelper {
                 }
             }
         }
-        fw.write("]}");
-        fw.flush();
-        fw.close();
+        fw.write("]");
+    }
+
+    /**
+     * Сохраняем Животных.
+     *
+     * @param fw FileWriter
+     * @throws IOException   IO Exception
+     * @throws JSONException JSON Exception
+     */
+    public static void saveAnimals(final FileWriter fw) throws IOException, JSONException {
+        fw.write("\"animals\":[");
+        boolean isFirst = true;
+        final List<AnimalBehaviour> animals = new ArrayList<>();
+        LiveObjectManager.manipulationAnimals(animals::add);
+        for (AnimalBehaviour animal : animals) {
+            if (isFirst) {
+                fw.write("{");
+                isFirst = false;
+            } else {
+                fw.write(",{");
+            }
+            fw.write("\"name\":\"");
+            fw.write(animal.getManager().getName());
+            fw.write("\", \"unique_name\":\"");
+            fw.write(animal.getUniqueName());
+            fw.write("\"}\n");
+        }
+        fw.write("]");
     }
 
     /**

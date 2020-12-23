@@ -1,9 +1,9 @@
-/**
- * @(#)Ant.java 1.0
+/*
+ * Ant.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal;
@@ -20,7 +20,9 @@ import com.lasgis.evolution.panels.Scalable;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.script.SimpleBindings;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.Map;
 
 import static com.lasgis.evolution.object.animal.AnimalState.analise;
@@ -71,7 +73,7 @@ public class Ant extends AbstractAnimal implements CallBack, EvolutionConstants 
      * @param longitude координата Y
      * @param manager an Animal Manager
      */
-    public Ant(final double latitude, final double longitude, final AbstractAnimalManager manager) {
+    public Ant(final double latitude, final double longitude, final AntManager manager) {
         super(latitude, longitude, manager);
         setMass(30);
         setEnergy(30);
@@ -189,7 +191,7 @@ public class Ant extends AbstractAnimal implements CallBack, EvolutionConstants 
 
     @Override
     public void toBirth() {
-        final Ant newAnt = new Ant(getLatitude(), getLongitude(), getManager());
+        final Ant newAnt = new Ant(getLatitude(), getLongitude(), (AntManager) getManager());
 
         // передача массы и энергии
         newAnt.setMass(birthBabyMass);
