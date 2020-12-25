@@ -44,7 +44,7 @@ public abstract class AbstractAnimalManager implements AnimalManagerBehaviour {
     private final List<AnimalRun> animalRuns = new CopyOnWriteArrayList<>();
     private final BlockingQueue<Runnable> workQueue = new SynchronousQueue<>();
     // ArrayBlockingQueue<Runnable>(50);
-    private AtomicInteger count = new AtomicInteger(0);
+    private final AtomicInteger count = new AtomicInteger(0);
     private boolean isShow = true;
 
     @Override
@@ -118,8 +118,8 @@ public abstract class AbstractAnimalManager implements AnimalManagerBehaviour {
             }
             incrementCount();
             CellHelper.getCell(animal.getLatitude(), animal.getLongitude()).element(getName()).incValue();
-            //log.debug((isHandMade ? "Стандартный " : "Новый ")
-            //    + animal.getUniqueName() + " = " + animal.getJsonInfo("родился"));
+//            log.debug((isHandMade ? "Стандартный " : "Новый ")
+//                + animal.getUniqueName() + " = " + animal.getJsonInfo("родился"));
         } catch (final Throwable ex) {
             log.error(ex.getMessage(), ex);
         }

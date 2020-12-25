@@ -1,6 +1,6 @@
 /**
  * @(#)Legs.java 1.0
- *
+ * <p>
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
  * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
@@ -10,8 +10,11 @@ package com.lasgis.evolution.object.animal.organs;
 
 import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.map.element.Parameters;
+import com.lasgis.evolution.object.Info;
+import com.lasgis.evolution.object.InfoType;
 import com.lasgis.evolution.object.animal.AbstractAnimal;
 import com.lasgis.evolution.object.animal.AnimalState;
+import lombok.Getter;
 
 /**
  * Ноги животного. Этот класс отвечает за перемещение.
@@ -22,23 +25,23 @@ import com.lasgis.evolution.object.animal.AnimalState;
  */
 public class Legs {
 
-    private AbstractAnimal owner;
-    private double dx;
-    private double dy;
-    private double dEnergy = 0.0;
-    private AnimalState afterMoveState;
-    private double radius;
-    private double angle;
+    private final AbstractAnimal owner;
 
-    /**
-     * тип передвижения.
-     */
-    public enum MoveType {
-        /** с постоянной скоростью. */
-        velocity,
-        /** с постоянной потерей энергии. */
-        energy
-    }
+    private double dx;
+
+    private double dy;
+
+    private double dEnergy = 0.0;
+
+    @Info(type = InfoType.SAVE)
+    @Getter
+    private AnimalState afterMoveState;
+
+    private double radius;
+
+    @Info(type = InfoType.SAVE)
+    @Getter
+    private double angle;
 
     /**
      * Constructor.
@@ -47,27 +50,6 @@ public class Legs {
     public Legs(final AbstractAnimal owner) {
         this.owner = owner;
     }
-
-    public AnimalState getAfterMoveState() {
-        return afterMoveState;
-    }
-
-    public double getAngle() {
-        return angle;
-    }
-
-    /**
-     * Перемещение в заданную точку.
-     * @param x координата x (широта)
-     * @param y координата y (долгота)
-     * @param value скорость передвижения или энергия
-     * @param type kind of value - velocity or energy.
-    public void moveTo(int x, int y, double value, MoveType type) {
-        double newLatitude = CellHelper.getCellLatitude(x, y);
-        double newLongitude = CellHelper.getCellLongitude(x, y);
-        moveTo(newLatitude, newLongitude, value, type);
-    }
-    */
 
     /**
      * Перемещение в заданную ячейку.
@@ -82,6 +64,19 @@ public class Legs {
             value, type
         );
     }
+
+    /**
+     * Перемещение в заданную точку.
+     * @param x координата x (широта)
+     * @param y координата y (долгота)
+     * @param value скорость передвижения или энергия
+     * @param type kind of value - velocity or energy.
+    public void moveTo(int x, int y, double value, MoveType type) {
+    double newLatitude = CellHelper.getCellLatitude(x, y);
+    double newLongitude = CellHelper.getCellLongitude(x, y);
+    moveTo(newLatitude, newLongitude, value, type);
+    }
+     */
 
     /**
      * Перемещение в заданную точку.
@@ -155,5 +150,15 @@ public class Legs {
         } else {
             owner.setState(afterMoveState == AnimalState.move ? AnimalState.analise : afterMoveState);
         }
+    }
+
+    /**
+     * тип передвижения.
+     */
+    public enum MoveType {
+        /** с постоянной скоростью. */
+        velocity,
+        /** с постоянной потерей энергии. */
+        energy
     }
 }

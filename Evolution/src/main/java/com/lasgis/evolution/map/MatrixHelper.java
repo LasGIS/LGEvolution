@@ -134,16 +134,11 @@ public class MatrixHelper {
         LiveObjectManager.manipulationAnimals(animals::add);
         for (AnimalBehaviour animal : animals) {
             if (isFirst) {
-                fw.write("{");
                 isFirst = false;
             } else {
-                fw.write(",{");
+                fw.write(",\n");
             }
-            fw.write("\"name\":\"");
-            fw.write(animal.getManager().getName());
-            fw.write("\", \"unique_name\":\"");
-            fw.write(animal.getUniqueName());
-            fw.write("\"}\n");
+            fw.write(animal.getJsonObject().toString());
         }
         fw.write("]");
     }

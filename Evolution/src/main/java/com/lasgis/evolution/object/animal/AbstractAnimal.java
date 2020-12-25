@@ -21,6 +21,8 @@ import com.lasgis.util.LGFormatter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -62,16 +64,18 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
      * Желудок.
      */
     @Info(name = "Желудок", type = {InfoType.INFO, InfoType.STAT, InfoType.SAVE})
+    @Getter
+    @Setter
     protected Stomach stomach;
 
+    @Info(name = "широта", type = {InfoType.SAVE})
     @Getter
     @Setter
-    @Info(name = "широта", type = {InfoType.SAVE})
     private double latitude;
 
+    @Info(name = "долгота", type = {InfoType.SAVE})
     @Getter
     @Setter
-    @Info(name = "долгота", type = {InfoType.SAVE})
     private double longitude;
 
     @Getter
@@ -97,9 +101,9 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
     /**
      * Состояние животного.
      */
+    @Info(name = "состояние", head = "Статистика", type = {InfoType.INFO, InfoType.SAVE})
     @Getter
     @Setter
-    @Info(name = "состояние", head = "Статистика", type = {InfoType.INFO, InfoType.SAVE})
     private AnimalState state;
 
     /**
@@ -386,11 +390,69 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
      */
     public abstract void incDines();
 
-    public Stomach getStomach() {
-        return stomach;
+    @Override
+    public JSONObject getJsonObject() throws JSONException {
+        final JSONObject json = new JSONObject();
+        return getJsonObject(json, this, this.getClass());
     }
 
-    public void setStomach(final Stomach stomach) {
-        this.stomach = stomach;
+    private JSONObject getJsonObject(final JSONObject json, final Object obj, final Class<?> aClass) throws JSONException {
+        Info info = aClass.getAnnotation(Info.class);
+        if (info != null && (Arrays.binarySearch(info.type(), InfoType.SAVE) >= 0)) {
+            if (obj instanceof AbstractAnimal) {
+                json.put("name", manager.getName());
+            }
+        }
+
+        final Class<?> superclass = aClass.getSuperclass();
+        if (superclass != null) {
+            info = superclass.getAnnotation(Info.class);
+            if (info != null && (Arrays.binarySearch(info.type(), InfoType.SAVE) >= 0)) {
+                getJsonObject(json, obj, superclass);
+            }
+        }
+
+        final Field[] annotations = aClass.getDeclaredFields();
+        for (Field field : annotations) {
+            info = field.getAnnotation(Info.class);
+            if (info != null && (Arrays.binarySearch(info.type(), InfoType.SAVE) >= 0)) {
+                final String name = field.getName();
+                field.setAccessible(true);
+                try {
+                    switch (field.getType().getName()) {
+                        case "int":
+                            json.put(name, field.getInt(obj));
+                            break;
+                        case "double":
+                            json.put(name, field.getDouble(obj));
+                            break;
+                        case "java.lang.String":
+                            json.put(name, field.get(obj));
+                            break;
+                        default:
+                            final Object fieldObj = field.get(obj);
+                            if (fieldObj != null) {
+                                if (fieldObj instanceof Map) {
+                                    @SuppressWarnings("unchecked") final Map<Object, Object> map = (Map<Object, Object>) fieldObj;
+                                    for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                                        json.put(entry.getKey().toString(), entry.getValue());
+                                    }
+                                } else if (fieldObj instanceof AnimalState) {
+                                    json.put(name, ((AnimalState) fieldObj).name);
+                                } else {
+                                    json.put(name,
+                                        getJsonObject(new JSONObject(), fieldObj, fieldObj.getClass())
+                                    );
+                                }
+                            }
+                            break;
+                    }
+                } catch (final IllegalAccessException ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+        }
+
+        return json;
     }
 }

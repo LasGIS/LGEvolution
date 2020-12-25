@@ -9,6 +9,7 @@
 package com.lasgis.evolution.object.animal;
 
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.testng.annotations.Test;
 import org.testng.log4testng.Logger;
 
@@ -20,14 +21,19 @@ import org.testng.log4testng.Logger;
 @Slf4j
 public class AbstractAnimalTest {
 
-    private static final Logger LOG = Logger.getLogger(AbstractAnimalTest.class);
-
     @Test
     public void testGravityConstructor() throws Exception {
         Pig pig = new Pig(1,1, new PigManager());
         StringBuilder sb = new StringBuilder();
         pig.getInfo(sb);
         log.info(sb.toString());
+    }
+
+    @Test
+    public void testSavePigAnimals() throws Exception {
+        final Pig pig = new Pig(11,15, new PigManager());
+        final JSONObject json = pig.getJsonObject();
+        log.info(json.toString());
     }
 
 }

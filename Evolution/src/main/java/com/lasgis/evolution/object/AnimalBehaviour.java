@@ -9,6 +9,8 @@
 package com.lasgis.evolution.object;
 
 import com.lasgis.evolution.map.Cell;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * The Class AnimalBehaviour.
@@ -123,4 +125,10 @@ public interface AnimalBehaviour {
      * @return StringBuilder class
      */
     StringBuilder getJsonInfo(String state);
+
+    /**
+     * Получить JSONObject объект для записи.
+     * @return JSONObject объект
+     */
+    JSONObject getJsonObject() throws JSONException;
 }
