@@ -66,12 +66,12 @@ public interface AnimalManagerBehaviour extends EvolutionConstants, LiveObjectEl
     void createSavedAnimal(double latitude, double longitude, JSONObject json) throws JSONException;
 
     /**
-     * Убить группу животных волшебным способом.
+     * Убить бедное животное.
      *
-     * @param uid широта точки
+     * @param uniqueName название животного
      * @return true if животное убито и false if оно не найдено
      */
-    boolean killAnimal(String uid);
+    boolean killAnimal(String uniqueName);
 
     /**
      * Рисуем перемещения животных.

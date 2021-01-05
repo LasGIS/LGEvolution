@@ -1,9 +1,9 @@
-/**
- * @(#)AnimalRun.java 1.0
+/*
+ * AnimalRun.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal;

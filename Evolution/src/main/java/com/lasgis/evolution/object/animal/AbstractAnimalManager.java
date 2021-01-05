@@ -93,10 +93,10 @@ public abstract class AbstractAnimalManager implements AnimalManagerBehaviour {
     }
 
     @Override
-    public boolean killAnimal(final String uid) {
+    public boolean killAnimal(final String uniqueName) {
         for (AnimalRun animalRun : animalRuns) {
             for (AbstractAnimal animal : animalRun.getAnimals()) {
-                if (animal.getUniqueName().equals(uid)) {
+                if (animal.getUniqueName().equals(uniqueName)) {
                     animalRun.deleteAnimal(animal);
                     return true;
                 }

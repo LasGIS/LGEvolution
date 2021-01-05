@@ -202,6 +202,14 @@ public class MatrixHelper {
      * @throws JSONException JSON Exception
      */
     public static void loadAnimals(final JSONArray array) throws JSONException {
+        // удаляем всех животных
+        final List<AnimalBehaviour> animals = new ArrayList<>();
+        LiveObjectManager.manipulationAnimals(animals::add);
+        animals.forEach(animal -> {
+            final AnimalManagerBehaviour manager = animal.getManager();
+            manager.killAnimal(animal.getUniqueName());
+        });
+
         for (int i = 0; i < array.length(); i++) {
             final JSONObject json = array.getJSONObject(i);
             final AnimalManagerBehaviour manager = NAME_TO_ANIMAL_MANAGER_MAP.get(json.getString("name"));
