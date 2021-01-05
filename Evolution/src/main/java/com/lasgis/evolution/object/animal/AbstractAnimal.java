@@ -3,7 +3,7 @@
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal;
@@ -21,6 +21,7 @@ import com.lasgis.util.LGFormatter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -171,8 +172,7 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
      * Рисуем животное в своём состоянии.
      *
      * @param graphics контекст вывода.
-     * @param interval квадратный диапазон,
-     *                 в который должно входить животное
+     * @param interval квадратный диапазон, в который должно входить животное
      */
     public abstract void draw(Graphics graphics, Scalable interval);
 
@@ -433,12 +433,9 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
                             final Object fieldObj = field.get(obj);
                             if (fieldObj != null) {
                                 if (fieldObj instanceof Map) {
-                                    @SuppressWarnings("unchecked") final Map<Object, Object> map = (Map<Object, Object>) fieldObj;
-                                    for (Map.Entry<Object, Object> entry : map.entrySet()) {
-                                        json.put(entry.getKey().toString(), entry.getValue());
-                                    }
+                                    json.put(name, fieldObj);
                                 } else if (fieldObj instanceof AnimalState) {
-                                    json.put(name, ((AnimalState) fieldObj).name);
+                                    json.put(name, ((AnimalState) fieldObj).name());
                                 } else {
                                     json.put(name,
                                         getJsonObject(new JSONObject(), fieldObj, fieldObj.getClass())
@@ -454,5 +451,69 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
         }
 
         return json;
+    }
+
+    @Override
+    public void applyJsonObject(JSONObject json) throws JSONException {
+        applyJsonObject(json, this, this.getClass());
+    }
+
+    private void applyJsonObject(final JSONObject json, final Object obj, final Class<?> aClass) throws JSONException {
+        Info info;
+
+        final Class<?> superclass = aClass.getSuperclass();
+        if (superclass != null) {
+            info = superclass.getAnnotation(Info.class);
+            if (info != null && (Arrays.binarySearch(info.type(), InfoType.SAVE) >= 0)) {
+                applyJsonObject(json, obj, superclass);
+            }
+        }
+
+        final Field[] annotations = aClass.getDeclaredFields();
+        for (Field field : annotations) {
+            info = field.getAnnotation(Info.class);
+            if (info != null && (Arrays.binarySearch(info.type(), InfoType.SAVE) >= 0)) {
+                final String name = field.getName();
+                field.setAccessible(true);
+                try {
+                    switch (field.getType().getName()) {
+                        case "int":
+                            field.setInt(obj, json.getInt(name));
+                            break;
+                        case "double":
+                            field.setDouble(obj, json.getDouble(name));
+                            break;
+                        case "java.lang.String":
+                            field.set(obj, json.getString(name));
+                            break;
+                        case "com.lasgis.evolution.object.animal.AnimalState": {
+                            field.set(obj, AnimalState.valueOf(json.getString(name)));
+                        }
+                        break;
+                        default:
+                            final Object fieldObj = field.get(obj);
+                            if (fieldObj instanceof Map) {
+                                @SuppressWarnings("unchecked") final Map<Object, Object> fieldMap = (Map<Object, Object>) fieldObj;
+                                final JSONObject map = json.getJSONObject(name);
+                                final JSONArray names = map.names();
+                                log.info("map.names()={}", map.names());
+                                for (int i = 0; i < names.length(); i++) {
+                                    final String mapName = names.getString(i);
+                                    // у нас пока double :)
+                                    final double val = map.getDouble(mapName);
+                                    fieldMap.put(mapName, val);
+                                }
+                            } else {
+                                applyJsonObject(json.getJSONObject(name), fieldObj, fieldObj.getClass());
+                            }
+                            break;
+                    }
+                } catch (final JSONException ex) {
+                    log.debug(ex.getMessage());
+                } catch (final IllegalAccessException ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+        }
     }
 }

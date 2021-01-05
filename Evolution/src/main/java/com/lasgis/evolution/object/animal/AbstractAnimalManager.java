@@ -3,7 +3,7 @@
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal;
@@ -16,6 +16,8 @@ import com.lasgis.evolution.object.AnimalManipulator;
 import com.lasgis.evolution.panels.Scalable;
 import com.lasgis.util.ResourceLoader;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.Icon;
 import java.awt.Graphics;
@@ -80,6 +82,13 @@ public abstract class AbstractAnimalManager implements AnimalManagerBehaviour {
     @Override
     public void createNewAnimal(final double latitude, final double longitude) {
         final AbstractAnimal animal = createNew(latitude, longitude);
+        addNewAnimal(animal, true);
+    }
+
+    @Override
+    public void createSavedAnimal(final double latitude, final double longitude, final JSONObject json) throws JSONException {
+        final AbstractAnimal animal = createNew(latitude, longitude);
+        animal.applyJsonObject(json);
         addNewAnimal(animal, true);
     }
 

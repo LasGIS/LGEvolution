@@ -3,7 +3,7 @@
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.panels;
@@ -241,7 +241,7 @@ public class MainFrame extends JFrame implements ComponentListener {
         dlg.setVisible(true);
         if (dlg.getFile() != null) {
             try {
-                MatrixHelper.matrixContextLoad(dlg.getDirectory() + dlg.getFile());
+                MatrixHelper.loadMatrixContext(dlg.getDirectory() + dlg.getFile());
             } catch (final Exception ex) {
                 log.error(ex.getMessage(), ex);
             }

@@ -3,7 +3,7 @@
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal.organs;
@@ -63,11 +63,11 @@ public class Stomach {
 
     /** масса травы, овса или мяса, находящаяся в желудке. */
     @Info(name = "масса", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
-    private HashMap<String, Double> stomach = new HashMap<>();
+    private final HashMap<String, Double> stomach = new HashMap<>();
 
     /** Степень переваривания отдельных видов пищи. */
     @Info(name = "степень", type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
-    private HashMap<String, Double> digestion = new HashMap<>();
+    private final HashMap<String, Double> digestion = new HashMap<>();
 
     /** масса фекалий, находящаяся в кишках. Если масса превышает порог, то необходима defecation */
     @Info(name = "масса фекалий", type = { InfoType.INFO, InfoType.SAVE })

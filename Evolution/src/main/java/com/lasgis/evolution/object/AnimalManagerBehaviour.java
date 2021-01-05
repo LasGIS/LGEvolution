@@ -3,7 +3,7 @@
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object;
@@ -11,6 +11,8 @@ package com.lasgis.evolution.object;
 import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.object.animal.AbstractAnimal;
 import com.lasgis.evolution.panels.Scalable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.awt.Graphics;
 import java.util.List;
@@ -47,13 +49,25 @@ public interface AnimalManagerBehaviour extends EvolutionConstants, LiveObjectEl
 
     /**
      * Родить новое животное волшебным способом.
-     * @param latitude широта точки
+     *
+     * @param latitude  широта точки
      * @param longitude долгота точки
      */
     void createNewAnimal(double latitude, double longitude);
 
     /**
+     * Добавить животное, сохраненное ранее.
+     *
+     * @param latitude  широта точки
+     * @param longitude долгота точки
+     * @param json      сохраненный ранее объект со свойствами животного
+     * @throws JSONException JSON Exception
+     */
+    void createSavedAnimal(double latitude, double longitude, JSONObject json) throws JSONException;
+
+    /**
      * Убить группу животных волшебным способом.
+     *
      * @param uid широта точки
      * @return true if животное убито и false if оно не найдено
      */
@@ -61,6 +75,7 @@ public interface AnimalManagerBehaviour extends EvolutionConstants, LiveObjectEl
 
     /**
      * Рисуем перемещения животных.
+     *
      * @param graphics контекст вывода.
      * @param interval квадратный диапазон, в который должно входить ячейки
      */
@@ -68,13 +83,15 @@ public interface AnimalManagerBehaviour extends EvolutionConstants, LiveObjectEl
 
     /**
      * Добавить новое животное в процесс.
-     * @param animal новое животное
+     *
+     * @param animal     новое животное
      * @param isHandMade true if create by god and false if was born from animal.
      */
     void addNewAnimal(AbstractAnimal animal, boolean isHandMade);
 
     /**
      * Найти все животные внутри данной ячейки.
+     *
      * @param cell ячейка
      * @return список животных
      */
@@ -82,6 +99,7 @@ public interface AnimalManagerBehaviour extends EvolutionConstants, LiveObjectEl
 
     /**
      * Некоторая абстрактная манипуляция со всем списком животных.
+     *
      * @param manipulator объект манипулятора
      */
     void manipulationAnimals(AnimalManipulator manipulator);

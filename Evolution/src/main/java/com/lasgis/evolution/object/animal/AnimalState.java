@@ -1,9 +1,9 @@
-/**
- * @(#)AnimalState.java 1.0
+/*
+ * AnimalState.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.animal;
@@ -38,7 +38,7 @@ public enum AnimalState {
     /** умер. */
     died("умер");
 
-    @Info(type = { InfoType.INFO, InfoType.SAVE })
+    @Info(type = {InfoType.INFO, InfoType.SAVE})
     String name;
 
     AnimalState(final String name) {

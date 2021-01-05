@@ -3,12 +3,13 @@
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.map;
 
 import com.lasgis.evolution.object.AnimalBehaviour;
+import com.lasgis.evolution.object.AnimalManagerBehaviour;
 import com.lasgis.evolution.object.EvolutionConstants;
 import com.lasgis.evolution.object.Info;
 import com.lasgis.evolution.object.InfoType;
@@ -26,8 +27,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,6 +44,8 @@ import java.util.stream.Collectors;
 public class MatrixHelper {
 
     public static final Set<String> KEYS_ACCESSIBLE_FOR_SAVE = getKeysAccessibleForSave();
+
+    public static final Map<String, AnimalManagerBehaviour> NAME_TO_ANIMAL_MANAGER_MAP = getNameAnimal2ManagerMap();
 
     private MatrixHelper() {
     }
@@ -65,6 +70,14 @@ public class MatrixHelper {
             }
             return null;
         }).collect(Collectors.toSet());
+    }
+
+    private static Map<String, AnimalManagerBehaviour> getNameAnimal2ManagerMap() {
+        final Map<String, AnimalManagerBehaviour> map = new HashMap<>();
+        for (AnimalManagerBehaviour animal : LiveObjectManager.ANIMALS) {
+            map.put(animal.getName(), animal);
+        }
+        return map;
     }
 
     /**
@@ -150,13 +163,23 @@ public class MatrixHelper {
      * @throws FileNotFoundException File Not Found Exception
      * @throws JSONException         JSON Exception
      */
-    public static void matrixContextLoad(final String fileName) throws FileNotFoundException, JSONException {
+    public static void loadMatrixContext(final String fileName) throws FileNotFoundException, JSONException {
         final FileReader reader = new FileReader(fileName);
-        JSONObject json = new JSONObject(new JSONTokener(reader));
-        final JSONArray array = json.getJSONArray("matrix");
+        final JSONObject json = new JSONObject(new JSONTokener(reader));
+        loadMatrixElements(json.getJSONArray("matrix"));
+        loadAnimals(json.getJSONArray("animals"));
+    }
+
+    /**
+     * Загружаем элементы матрицы.
+     *
+     * @param array массив элементов мартицы как JSONArray объект
+     * @throws JSONException JSON Exception
+     */
+    public static void loadMatrixElements(final JSONArray array) throws JSONException {
         Matrix.clear();
         for (int i = 0; i < array.length(); i++) {
-            json = array.getJSONObject(i);
+            final JSONObject json = array.getJSONObject(i);
             final int x = json.getInt("x");
             final int y = json.getInt("y");
             final JSONObject elements = json.getJSONObject("elements");
@@ -172,4 +195,19 @@ public class MatrixHelper {
         }
     }
 
+    /**
+     * Загружаем всех сохраненных ранее животных.
+     *
+     * @param array массив сохраненных ранее животных как JSONArray объект
+     * @throws JSONException JSON Exception
+     */
+    public static void loadAnimals(final JSONArray array) throws JSONException {
+        for (int i = 0; i < array.length(); i++) {
+            final JSONObject json = array.getJSONObject(i);
+            final AnimalManagerBehaviour manager = NAME_TO_ANIMAL_MANAGER_MAP.get(json.getString("name"));
+            final double latitude = json.getDouble("latitude");
+            final double longitude = json.getDouble("longitude");
+            manager.createSavedAnimal(latitude, longitude, json);
+        }
+    }
 }
