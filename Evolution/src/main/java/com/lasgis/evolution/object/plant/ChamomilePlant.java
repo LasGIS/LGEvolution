@@ -1,9 +1,9 @@
-/**
- * @(#)CamomilePlant.java 1.0
+/*
+ * ChamomilePlant.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.plant;
@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.lasgis.evolution.object.EvolutionValues.GROUND_PLAN_FACTOR;
+
 /**
  * Простой класс растений (Ромашка).
  *
@@ -32,21 +34,6 @@ import java.util.Map;
  */
 @Slf4j
 public class ChamomilePlant extends AbstractPlant {
-
-    @Override
-    public String getName() {
-        return EvolutionConstants.CHAMOMILE_KEY;
-    }
-
-    @Override
-    public int getIndex() {
-        return 10;
-    }
-
-    @Override
-    public PlantBehaviour[] subElements() {
-        return subElements;
-    }
 
     private final PlantBehaviour[] subElements = new PlantBehaviour[]{
         new AbstractPlantBehaviour() {
@@ -87,7 +74,7 @@ public class ChamomilePlant extends AbstractPlant {
                     final double incDelta = leaf * balance / 30.0;
 
                     // растение забирает сок земли
-                    cell.element(GROUND_KEY).decValue(leaf / GROUND_PLAN_DELIMITER);
+                    cell.element(GROUND_KEY).decValue(leaf * GROUND_PLAN_FACTOR);
 
                     if (incDelta > 0) {
                         leaf = cell.element(CHAMOMILE_LEAF_KEY).incValue(incDelta);
@@ -131,18 +118,18 @@ public class ChamomilePlant extends AbstractPlant {
                 final double flower = cell.element(CHAMOMILE_FLOWER_KEY).value();
                 if (flower > 0.0001) {
                     final NearPoint[] nearPoints = CellHelper.getNearPoints(18, true);
-                    double leafs = 0.0;
+                    double leaves = 0.0;
                     for (NearPoint point : nearPoints) {
                         final Cell cellPoint = cell.getCell(point);
                         final double factor = (point.getDistance() > 1 ? 1 / Math.pow(point.getDistance(), 2) : 1);
                         final double leafPoint = cellPoint.element(CHAMOMILE_LEAF_KEY).value();
                         if (leafPoint > flower * factor) {
                             cellPoint.element(CHAMOMILE_LEAF_KEY).decValue((leafPoint - flower * factor) / 50.);
-                            leafs += (leafPoint - flower * factor) / 50.;
+                            leaves += (leafPoint - flower * factor) / 50.;
                         }
                     }
-                    if (leafs > 0) {
-                        cell.element(CHAMOMILE_FLOWER_KEY).incValue(leafs / 50.0);
+                    if (leaves > 0) {
+                        cell.element(CHAMOMILE_FLOWER_KEY).incValue(leaves / 50.0);
                     }
                 } else if (leaf > 50.0 && Math.random() < .1) {
                     final NearPoint[] nearPoints = CellHelper.getNearPoints(30, true);
@@ -186,5 +173,20 @@ public class ChamomilePlant extends AbstractPlant {
             }
         }
     };
+
+    @Override
+    public String getName() {
+        return EvolutionConstants.CHAMOMILE_KEY;
+    }
+
+    @Override
+    public int getIndex() {
+        return 10;
+    }
+
+    @Override
+    public PlantBehaviour[] subElements() {
+        return subElements;
+    }
 
 }

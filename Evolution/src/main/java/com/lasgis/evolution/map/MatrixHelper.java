@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.lasgis.evolution.object.EvolutionValues.GROUND_PLAN_FACTOR;
+import static com.lasgis.evolution.object.EvolutionValues.MAX_GROUND_VALUE;
+
 /**
  * The Class MatrixHelper.
  *
@@ -90,6 +93,12 @@ public class MatrixHelper {
     public static void matrixContextSave(final String fileName) throws IOException, JSONException {
         final FileWriter fw = new FileWriter(fileName);
         fw.write("{");
+        fw.write("\"max_ground_value\":");
+        fw.write(Double.toString(MAX_GROUND_VALUE));
+        fw.write(",\n\"ground_plan_factor\":");
+        fw.write(Double.toString(GROUND_PLAN_FACTOR));
+        fw.write(",\n");
+
         saveMatrixElements(fw);
         fw.write(",\n");
         saveAnimals(fw);
@@ -166,6 +175,17 @@ public class MatrixHelper {
     public static void loadMatrixContext(final String fileName) throws FileNotFoundException, JSONException {
         final FileReader reader = new FileReader(fileName);
         final JSONObject json = new JSONObject(new JSONTokener(reader));
+        try {
+            MAX_GROUND_VALUE = json.getDouble("max_ground_value");
+        } catch (final JSONException ex) {
+            log.debug("No saved MAX_GROUND_VALUE");
+        }
+        try {
+            GROUND_PLAN_FACTOR = json.getDouble("ground_plan_factor");
+        } catch (final JSONException ex) {
+            log.debug("No saved GROUND_PLAN_FACTOR");
+        }
+
         loadMatrixElements(json.getJSONArray("matrix"));
         loadAnimals(json.getJSONArray("animals"));
     }

@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -88,7 +89,10 @@ public class MainFrame extends JFrame implements ComponentListener {
             new SettingMenuItem[] {
                 new SettingMenuItem(
                     "About", "help.gif", "Кто ЭТО сделал!", this::jMenuHelpAboutAction, null
-                )
+                ),
+                new SettingMenuItem(
+                    "System Properties", "textfile.gif", "Основные свойства", this::jMenuSystemPropertiesAction, null
+                ),
             }
         )
     };
@@ -97,19 +101,23 @@ public class MainFrame extends JFrame implements ComponentListener {
     private final SettingToolBarItem[] toolBarSetting = {
         new SettingToolBarItem(
             "Помощь", "help.gif", "Help",
-            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, MainFrame.this::jMenuHelpAboutAction
+            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, this::jMenuHelpAboutAction
+        ),
+        new SettingToolBarItem(
+            "Свойства", "textfile.gif", "Общие свойства",
+            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, this::jMenuSystemPropertiesAction
         ),
         new SettingToolBarItem(
             "Load Matrix", "openFile.gif", "читаем матрицу",
-            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, MainFrame.this::jMenuContextLoad
+            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, this::jMenuContextLoad
         ),
         new SettingToolBarItem(
             "Save Matrix", "closeFile.gif", "запоминаем матрицу",
-            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, MainFrame.this::jMenuContextSave
+            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, this::jMenuContextSave
         ),
         new SettingToolBarItem(
             "Следить", null, "Следить за выбранным животным",
-            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, MainFrame.this::jWatchForSelectedAnimal
+            TOOL_BAR_WIDTH, TOOL_BAR_HEIGHT, this::jWatchForSelectedAnimal
         ),
         new SettingToolBarItem(
             "Exit", null, "Exit from programm",
@@ -292,16 +300,16 @@ public class MainFrame extends JFrame implements ComponentListener {
      */
     public void jMenuHelpAboutAction(final ActionEvent event) {
         final MainFrameAboutBox dlg = new MainFrameAboutBox(this);
-        final Dimension dlgSize = dlg.getPreferredSize();
-        final Dimension frmSize = getSize();
-        final Point loc = getLocation();
-        dlg.setLocation(
-            (frmSize.width - dlgSize.width) / 2 + loc.x,
-            (frmSize.height - dlgSize.height) / 2 + loc.y
-        );
-        dlg.setModal(true);
-        dlg.pack();
-        dlg.setVisible(true);
+        setVisibleDialog(dlg);
+    }
+
+    /**
+     * Системные свойства.
+     * @param event Action Event
+     */
+    public void jMenuSystemPropertiesAction(final ActionEvent event) {
+        final SystemPropertiesDialog dlg = new SystemPropertiesDialog(this);
+        setVisibleDialog(dlg);
     }
 
     /**
@@ -314,6 +322,19 @@ public class MainFrame extends JFrame implements ComponentListener {
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
         }
 */
+    }
+
+    private void setVisibleDialog(JDialog dlg) {
+        final Dimension dlgSize = dlg.getPreferredSize();
+        final Dimension frmSize = getSize();
+        final Point loc = getLocation();
+        dlg.setLocation(
+            (frmSize.width - dlgSize.width) / 2 + loc.x,
+            (frmSize.height - dlgSize.height) / 2 + loc.y
+        );
+        dlg.setModal(true);
+        dlg.pack();
+        dlg.setVisible(true);
     }
 
     /**

@@ -1,9 +1,9 @@
-/**
- * @(#)GrassPlant.java 1.0
+/*
+ * GrassPlant.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.plant;
@@ -16,6 +16,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Collections;
+
+import static com.lasgis.evolution.object.EvolutionValues.GROUND_PLAN_FACTOR;
 
 /**
  * Простой класс растений.
@@ -70,7 +72,7 @@ public class GrassPlant extends AbstractPlant {
             final double incDelta = grass * balance / 30.0;
 
             // растение забирает сок земли
-            cell.element(GROUND_KEY).decValue(grass / GROUND_PLAN_DELIMITER);
+            cell.element(GROUND_KEY).decValue(grass * GROUND_PLAN_FACTOR);
 
             if (incDelta > 0) {
                 grass = cell.element(GRASS_PLANT_KEY).incValue(incDelta);

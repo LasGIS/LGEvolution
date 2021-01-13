@@ -1,9 +1,9 @@
-/**
- * @(#)PropertyDialog.java 1.0
+/*
+ * PropertyDialog.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2014 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.animation.panels;
@@ -13,8 +13,21 @@ import com.lasgis.animation.map.object.AniTimeLine;
 import com.lasgis.animation.map.object.AniTimePolygon;
 import com.lasgis.util.Log;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,16 +40,16 @@ import java.awt.event.ActionListener;
 public class PropertyDialog extends JDialog implements ActionListener {
 
     /** Поле для показа цвета линии. */
-    private JTextField lineColorField = new JTextField(5);
+    private final JTextField lineColorField = new JTextField(5);
     /** Поле для показа цвета заливки. */
-    private JTextField fillColorField = new JTextField(5);
+    private final JTextField fillColorField = new JTextField(5);
     /** Поле для показа толщины линии. */
-    private JTextField thickField = new JTextField(5);
+    private final JTextField thickField = new JTextField(5);
 
     /** кнопка для закрытия. */
-    private JButton okButton = new JButton();
+    private final JButton okButton = new JButton();
     /** кнопка для закрытия. */
-    private JButton cancelButton = new JButton();
+    private final JButton cancelButton = new JButton();
 
     /** Цвет линии. */
     private Color lineColor;

@@ -1,9 +1,9 @@
-/**
- * @(#)BarleyPlant.java 1.0
+/*
+ * BarleyPlant.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.plant;
@@ -12,8 +12,13 @@ import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.object.EvolutionConstants;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.util.Arrays;
+
+import static com.lasgis.evolution.object.EvolutionValues.GROUND_PLAN_FACTOR;
 
 /**
  * The Class BarleyPlant (овес или ячмень).
@@ -79,7 +84,7 @@ public class BarleyPlant extends AbstractPlant {
             double incDelta = barley * balance / 30.0;
 
             // растение забирает сок земли
-            cell.element(GROUND_KEY).decValue(barley / GROUND_PLAN_DELIMITER);
+            cell.element(GROUND_KEY).decValue(barley * GROUND_PLAN_FACTOR);
 
             if (incDelta > 0) {
 /*

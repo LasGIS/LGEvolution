@@ -1,9 +1,9 @@
-/**
- * @(#)GroundPlant.java 1.0
+/*
+ * GroundPlant.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object.plant;
@@ -12,7 +12,11 @@ import com.lasgis.evolution.map.Cell;
 import com.lasgis.evolution.object.AbstractPlantBehaviour;
 import com.lasgis.evolution.object.PlantBehaviour;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
+import static com.lasgis.evolution.object.EvolutionValues.MAX_GROUND_VALUE;
 
 /**
  * Земля отвечает за 3 субстанции:<br/>

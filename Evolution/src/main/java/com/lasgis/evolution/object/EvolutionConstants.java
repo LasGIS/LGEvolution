@@ -3,7 +3,7 @@
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2020 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.evolution.object;
@@ -20,10 +20,6 @@ public interface EvolutionConstants {
     /** Земля даёт жизнь растениям. */
     @Info(type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     String GROUND_KEY = "Земля";
-    /** Максимально возможное количество земли. */
-    double MAX_GROUND_VALUE = 1000.0;
-    /** коэффициент: растения забирают сок земли */
-    double GROUND_PLAN_DELIMITER = 1000;
     /** Выделения животных, в том числе труп. Кал пагубно влияет на жизнь растений и может их погубить. */
     @Info(type = { InfoType.INFO, InfoType.STAT, InfoType.SAVE })
     String EXCREMENT_KEY = "Фекалии";

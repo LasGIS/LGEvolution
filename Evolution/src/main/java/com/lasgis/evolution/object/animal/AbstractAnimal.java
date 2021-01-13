@@ -496,7 +496,6 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
                                 @SuppressWarnings("unchecked") final Map<Object, Object> fieldMap = (Map<Object, Object>) fieldObj;
                                 final JSONObject map = json.getJSONObject(name);
                                 final JSONArray names = map.names();
-                                log.info("map.names()={}", map.names());
                                 for (int i = 0; i < names.length(); i++) {
                                     final String mapName = names.getString(i);
                                     // у нас пока double :)
