@@ -508,7 +508,7 @@ public abstract class AbstractAnimal implements AnimalBehaviour, CallBack {
                             break;
                     }
                 } catch (final JSONException ex) {
-                    log.debug(ex.getMessage());
+                    // log.debug(ex.getMessage());
                 } catch (final IllegalAccessException ex) {
                     log.error(ex.getMessage(), ex);
                 }

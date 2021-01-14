@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.lasgis.evolution.object.EvolutionValues.GROUND_PLAN_FACTOR;
@@ -175,19 +176,18 @@ public class MatrixHelper {
     public static void loadMatrixContext(final String fileName) throws FileNotFoundException, JSONException {
         final FileReader reader = new FileReader(fileName);
         final JSONObject json = new JSONObject(new JSONTokener(reader));
-        try {
-            MAX_GROUND_VALUE = json.getDouble("max_ground_value");
-        } catch (final JSONException ex) {
-            log.debug("No saved MAX_GROUND_VALUE");
-        }
-        try {
-            GROUND_PLAN_FACTOR = json.getDouble("ground_plan_factor");
-        } catch (final JSONException ex) {
-            log.debug("No saved GROUND_PLAN_FACTOR");
-        }
-
+        extractDouble(json, "max_ground_value", value -> MAX_GROUND_VALUE = value);
+        extractDouble(json, "ground_plan_factor", value -> GROUND_PLAN_FACTOR = value);
         loadMatrixElements(json.getJSONArray("matrix"));
         loadAnimals(json.getJSONArray("animals"));
+    }
+
+    private static void extractDouble(final JSONObject json, final String name, final Consumer<Double> callBack) {
+        try {
+            callBack.accept(json.getDouble(name));
+        } catch (final JSONException ex) {
+            log.debug("No saved {}", name);
+        }
     }
 
     /**
