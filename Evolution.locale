@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><LasGISConfig>
   <LocalConfig>
-    <Coordinate latitude="39350.520833333336" longitude="-27150.10416666665" scale="100000.0"/>
+    <Coordinate latitude="66943.91666666666" longitude="-1115.1041666666533" scale="300000.0"/>
     <Regime number="1"/>
   </LocalConfig>
 </LasGISConfig>
