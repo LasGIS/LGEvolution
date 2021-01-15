@@ -24,8 +24,6 @@ import javax.script.SimpleBindings;
  */
 public class RoutineFactoryTest {
 
-    private static final Logger LOG = Logger.getLogger(RoutineFactoryTest.class);
-
     private final TestAnimal animal = new TestAnimal(1, 1, new TestAnimalManager());
     private final StringBuilder expectedProgram = new StringBuilder(
           "/** Проверка на вставку. */\n"
