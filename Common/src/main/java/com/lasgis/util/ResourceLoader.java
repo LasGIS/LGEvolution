@@ -1,48 +1,53 @@
-/**
- * @(#)ResourceLoader.java 1.0
+/*
+ * ResourceLoader.java
  *
  * Title: LG Evolution powered by Java
  * Description: Program for imitation of evolutions process.
- * Copyright (c) 2012-2015 LasGIS Company. All Rights Reserved.
+ * Copyright (c) 2012-2021 LasGIS Company. All Rights Reserved.
  */
 
 package com.lasgis.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.reflections.Reflections;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
 /**
  * The class for loading text resources from file.
+ *
  * @author VLaskin
  * @version 1.0
  */
 @Slf4j
 public final class ResourceLoader {
 
-    /** Avoid to create the instance of class. */
-    private ResourceLoader() {
-    }
+    /** признак чтения системных свойств. */
+    public static final boolean EXTEND_SYS_PROPERTIES = true;
 
     /** Уровень вложенности. */
     private static final int DEPTH = 4;
 
-    /** признак чтения системных свойств. */
-    public static final boolean EXTEND_SYS_PROPERTIES = true;
-
     /** Global Properties. */
     private static Properties properties = loadProperties();
 
+    /** Avoid to create the instance of class. */
+    private ResourceLoader() {
+    }
+
     /**
      * Вернуть уже загруженные глобальные свойства.
+     *
      * @return глобальные свойства
      */
     public static Properties getProperties() {
@@ -51,6 +56,7 @@ public final class ResourceLoader {
 
     /**
      * Loads properties.
+     *
      * @return properties
      */
     private static Properties loadProperties() {
@@ -61,9 +67,19 @@ public final class ResourceLoader {
         } else {
             props = new Properties();
         }
-        for (String resource : ResourceStrings.RESOURCES) {
-            loadProperties(props, resource);
-        }
+        final Reflections reflections = new Reflections("com.lasgis.util");
+        final Set<Class<? extends ResourceStrings>> classes = reflections.getSubTypesOf(ResourceStrings.class);
+        classes.forEach(clazz -> {
+            try {
+                final ResourceStrings resourceStrings = clazz.getDeclaredConstructor().newInstance();
+                for (String resource : resourceStrings.resourceFiles()) {
+                    loadProperties(props, resource);
+                }
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+                log.error(ex.getMessage(), ex);
+            }
+        });
+
         checkIntegrity(props);
         checkDepth(props);
         checkRecursion(props);
@@ -72,6 +88,7 @@ public final class ResourceLoader {
 
     /**
      * Проверка на существование набора свойств.
+     *
      * @param props набор свойств
      */
     private static void checkIntegrity(final Properties props) {
@@ -94,6 +111,7 @@ public final class ResourceLoader {
 
     /**
      * Проверка рекурсии.
+     *
      * @param props набор свойств
      */
     private static void checkRecursion(final Properties props) {
@@ -113,7 +131,6 @@ public final class ResourceLoader {
     }
 
     /**
-     *
      * @param props набор свойств
      */
     private static void checkDepth(final Properties props) {
@@ -135,7 +152,8 @@ public final class ResourceLoader {
 
     /**
      * Проверка на существование уже загруженных свойств.
-     * @param def уже загруженные свойства
+     *
+     * @param def  уже загруженные свойства
      * @param over вновь загружаемые свойства
      */
     private static void checkOverriding(final Properties def, final Properties over) {
@@ -164,7 +182,8 @@ public final class ResourceLoader {
 
     /**
      * Читаем свойства в объект Properties def из файла под именем "resName".
-     * @param def Properties объект, в который закачиваются свойства
+     *
+     * @param def     Properties объект, в который закачиваются свойства
      * @param resName имя файла со свойствами
      */
     public static void loadProperties(final Properties def, final String resName) {
@@ -189,6 +208,7 @@ public final class ResourceLoader {
 
     /**
      * Function returns value of given property from file of properties.
+     *
      * @param key Property name
      * @return Property value
      */
@@ -207,6 +227,7 @@ public final class ResourceLoader {
 
     /**
      * Function returns value of given property from file of properties.
+     *
      * @param key Property name
      * @return Property value
      */
@@ -216,6 +237,7 @@ public final class ResourceLoader {
 
     /**
      * Function returns value of given property from file of properties or null if property is not found.
+     *
      * @param key Property key
      * @return Property value
      */
@@ -228,14 +250,12 @@ public final class ResourceLoader {
     } // getResourceOrNull(String): String
 
     /**
-     * Replaces <code>${xxx}</code> style constructions in the given value
-     * with the string value of the corresponding data types.
+     * Replaces <code>${xxx}</code> style constructions in the given value with the string value of the corresponding data types.
      *
-     * @param value The string to be scanned for property references.
-     *              May be <code>null</code>, in which case this
-     *              method returns immediately with no effect.
+     * @param value The string to be scanned for property references. May be <code>null</code>, in which case this method returns immediately with no
+     *              effect.
      * @return the original string with the properties replaced, or
-     *         <code>null</code> if the original string is <code>null</code>.
+     *     <code>null</code> if the original string is <code>null</code>.
      */
     private static String replaceProperties(final String value) {
 
@@ -259,14 +279,12 @@ public final class ResourceLoader {
                 Object replacement;
                 replacement = getResourceOrNull(prop);
                 if (replacement == null) {
-                    log.debug(
-                        "Property ${" + prop + "} has not been set"
-                    );
+                    log.debug("Property ${" + prop + "} has not been set");
                 }
                 fragment = (
                     replacement != null
-                    ? replacement.toString()
-                    : "${" + prop + "}"
+                        ? replacement.toString()
+                        : "${" + prop + "}"
                 );
             }
             sb.append(fragment);
@@ -276,19 +294,16 @@ public final class ResourceLoader {
     }
 
     /**
-     * Parses a string containing <code>${xxx}</code> style property
-     * references into two lists. The first list is a collection
-     * of text fragments, while the other is a set of string property names.
+     * Parses a string containing <code>${xxx}</code> style property references into two lists. The first list is a collection of text fragments,
+     * while the other is a set of string property names.
      * <code>null</code> entries in the first list indicate a property
      * reference from the second list.
-     *
+     * <p>
      * It can be overridden with a more efficient or customized version.
      *
      * @param value     Text to parse. Must not be <code>null</code>.
-     * @param fragments List to add text fragments to.
-     *                  Must not be <code>null</code>.
-     * @param refs List to add property names to.
-     *                     Must not be <code>null</code>.
+     * @param fragments List to add text fragments to. Must not be <code>null</code>.
+     * @param refs      List to add property names to. Must not be <code>null</code>.
      */
     private static void parsePropertyString(
         final String value, final Vector<String> fragments, final Vector<String> refs
@@ -341,10 +356,12 @@ public final class ResourceLoader {
 //        System.out.println(msg);
 //    }
 //
+
     /**
      * Проверка рекурсии.
+     *
      * @param props набор свойств
-     * @param key Property name
+     * @param key   Property name
      * @return признак установленной рекурсии
      */
     private static boolean hasRecursion(final Properties props, final String key) {
@@ -354,8 +371,9 @@ public final class ResourceLoader {
 
     /**
      * .
+     *
      * @param props набор свойств
-     * @param key Property name
+     * @param key   Property name
      * @return .
      */
     private static boolean exceedsDepth(final Properties props, final String key) {
@@ -364,9 +382,8 @@ public final class ResourceLoader {
     }
 
     /**
-     *
      * @param props набор свойств
-     * @param key Property name
+     * @param key   Property name
      * @return признак установленной рекурсии
      */
     private static boolean isResolved(final Properties props, final String key) {
@@ -387,10 +404,9 @@ public final class ResourceLoader {
     }
 
     /**
-     *
      * @param props набор свойств
      * @param stack вложенный стек свойств
-     * @param key Property name
+     * @param key   Property name
      * @return признак установленной рекурсии
      */
     private static boolean exceedsDepth(final Properties props, final Stack<String> stack, final String key) {
@@ -415,10 +431,9 @@ public final class ResourceLoader {
     }
 
     /**
-     *
      * @param props набор свойств
      * @param stack стек рекурсивного вызова
-     * @param key Property name
+     * @param key   Property name
      * @return признак установленной рекурсии
      */
     private static boolean hasRecursion(final Properties props, final Stack<String> stack, final String key) {
@@ -445,6 +460,7 @@ public final class ResourceLoader {
 
     /**
      * Читаем содержимое файла.
+     *
      * @param name Имя файла
      * @return содержимое файла как массив байт
      * @throws java.io.IOException IOException
@@ -461,9 +477,9 @@ public final class ResourceLoader {
                 if (sizeLoaded != sizefile) {
                     throw new IOException(
                         "Число прочитанных байт(" + sizeLoaded
-                        + ") не соответствует размеру файла \"" + name
-                        + "\"(" + sizeLoaded
-                        + ")!"
+                            + ") не соответствует размеру файла \"" + name
+                            + "\"(" + sizeLoaded
+                            + ")!"
                     );
                 }
                 return imageData;

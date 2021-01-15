@@ -1,4 +1,4 @@
-call mvn clean install -P maximum
+call mvn clean install -P middle
 cd Evolution
 call mvn assembly:single
 cd ../
